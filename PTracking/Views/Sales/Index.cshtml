@@ -1,0 +1,112 @@
+﻿@model IEnumerable<PTracking.Models.SalesEntity>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalSales)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Monthname)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalSales)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Monthname)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+
+//SHOW TICKETS DATA
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>ShowSalesData</h1>
+
+<input id="ID" value="Show Graph" type="button" />
+<br />
+
+<div>
+    <canvas id="myChart" style="max-width:400px; max-height:430px;"></canvas>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+
+
+    <script type="text/javascript">
+        $(function () {
+            $("#ID").click(function () {
+                $.ajax({
+                    type: "POST",
+                    url: "/Sales/GetSalesData",
+                    data: "",
+                    contextType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccessResult,
+                    error: OnError
+                });
+            });
+
+            function OnSuccessResult(data) {
+                var _data = data;
+                var _chartLabels = _data[0];
+                var _chartData = _data[1];
+
+                var barColor = ["red", "green", "blue", "orange", "brown"];
+
+                new Chart("myChart", {
+                    type: "bar",
+                    data: {
+                        labels: _chartLabels,
+                        datasets: [{
+                            backgroundColor: barColor,
+                            data: _chartData
+                        }]
+
+                    }
+                })
+            }
+
+            function OnError(err) {
+
+            }
+        })
+    </script>
+}
+
+
+
+
+
+
+
+
+
+

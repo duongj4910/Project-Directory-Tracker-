@@ -1,0 +1,39 @@
+﻿@model PTracking.Models.SalesEntity
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>SalesEntity</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="id" />
+            <div class="form-group">
+                <label asp-for="TotalSales" class="control-label"></label>
+                <input asp-for="TotalSales" class="form-control" />
+                <span asp-validation-for="TotalSales" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Monthname" class="control-label"></label>
+                <input asp-for="Monthname" class="form-control" />
+                <span asp-validation-for="Monthname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
