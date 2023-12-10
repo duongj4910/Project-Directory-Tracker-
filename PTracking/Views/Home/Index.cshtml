@@ -1,8 +1,24 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model PTracking.ViewModel.MultipleData
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<h2>Employee Data</h2>
+<table>
+    <thead>
+        <tr>
+
+            <th>Name</th>
+            <th>Email</th>
+            <!-- Add other employee properties as headers -->
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var employee in Model.Employee)
+        {
+            <tr>
+
+                <td>@employee.Name</td>
+                <td>@employee.Email</td>
+                <!-- Display other employee properties -->
+            </tr>
+        }
+    </tbody>
+</table>
