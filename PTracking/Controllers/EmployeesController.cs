@@ -10,107 +10,85 @@ using PTracking.Models;
 
 namespace PTracking.Controllers
 {
-    public class SalesController : Controller
+    public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public SalesController(ApplicationDbContext context)
+        public EmployeesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: SalesEntities
+        // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.SalesData.ToListAsync());
+            return View(await _context.Employee.ToListAsync());
         }
 
-        public IActionResult ShowSalesData()
-        {
-            return View();
-        }
-        [HttpPost]
-        public List<object> GetSalesData()
-        {
-
-            List<object> data = new List<object>();
-            //Tickets = Table Name
-            List<string> labels = _context.SalesData.Select(p => p.Monthname).ToList();
-
-            data.Add(labels);
-            List<int> TicketStatusByMonth = _context.SalesData.Select(p => p.TotalSales).ToList();
-            data.Add(TicketStatusByMonth);
-
-            return data;
-        }
-
-
-
-
-        // GET: Sales/Details/5
+        // GET: Employees/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.SalesData == null)
+            if (id == null || _context.Employee == null)
             {
                 return NotFound();
             }
 
-            var salesEntity = await _context.SalesData
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (salesEntity == null)
+            var employee = await _context.Employee
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(salesEntity);
+            return View(employee);
         }
 
-        // GET: Sales/Create
+        // GET: Employees/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Sales/Create
+        // POST: Employees/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("id,TotalSales,Monthname")] SalesEntity salesEntity)
+        public async Task<IActionResult> Create([Bind("ID,Name,Email,ProjectsAssigned,ClientsAssigned,Phone,TimeZone,DisctinctRole,Role,TeamLead,TeamId,ProjectManager,Availability,icon,PTO")] Employee employee)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(salesEntity);
+                _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(salesEntity);
+            return View(employee);
         }
 
-        // GET: Sales/Edit/5
+        // GET: Employees/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.SalesData == null)
+            if (id == null || _context.Employee == null)
             {
                 return NotFound();
             }
 
-            var salesEntity = await _context.SalesData.FindAsync(id);
-            if (salesEntity == null)
+            var employee = await _context.Employee.FindAsync(id);
+            if (employee == null)
             {
                 return NotFound();
             }
-            return View(salesEntity);
+            return View(employee);
         }
 
-        // POST: Sales/Edit/5
+        // POST: Employees/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("id,TotalSales,Monthname")] SalesEntity salesEntity)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Email,ProjectsAssigned,ClientsAssigned,Phone,TimeZone,DisctinctRole,Role,TeamLead,TeamId,ProjectManager,Availability,icon,PTO")] Employee employee)
         {
-            if (id != salesEntity.id)
+            if (id != employee.ID)
             {
                 return NotFound();
             }
@@ -119,12 +97,12 @@ namespace PTracking.Controllers
             {
                 try
                 {
-                    _context.Update(salesEntity);
+                    _context.Update(employee);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SalesEntityExists(salesEntity.id))
+                    if (!EmployeeExists(employee.ID))
                     {
                         return NotFound();
                     }
@@ -135,49 +113,49 @@ namespace PTracking.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(salesEntity);
+            return View(employee);
         }
 
-        // GET: Sales/Delete/5
+        // GET: Employees/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.SalesData == null)
+            if (id == null || _context.Employee == null)
             {
                 return NotFound();
             }
 
-            var salesEntity = await _context.SalesData
-                .FirstOrDefaultAsync(m => m.id == id);
-            if (salesEntity == null)
+            var employee = await _context.Employee
+                .FirstOrDefaultAsync(m => m.ID == id);
+            if (employee == null)
             {
                 return NotFound();
             }
 
-            return View(salesEntity);
+            return View(employee);
         }
 
-        // POST: Sales/Delete/5
+        // POST: Employees/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.SalesData == null)
+            if (_context.Employee == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.SalesData'  is null.");
+                return Problem("Entity set 'ApplicationDbContext.Employee'  is null.");
             }
-            var salesEntity = await _context.SalesData.FindAsync(id);
-            if (salesEntity != null)
+            var employee = await _context.Employee.FindAsync(id);
+            if (employee != null)
             {
-                _context.SalesData.Remove(salesEntity);
+                _context.Employee.Remove(employee);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SalesEntityExists(int id)
+        private bool EmployeeExists(int id)
         {
-          return (_context.SalesData?.Any(e => e.id == id)).GetValueOrDefault();
+          return (_context.Employee?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }

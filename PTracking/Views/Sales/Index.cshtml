@@ -41,7 +41,7 @@
 </table>
 
 
-//SHOW TICKETS DATA
+
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -53,6 +53,9 @@
 
 <div>
     <canvas id="myChart" style="max-width:400px; max-height:430px;"></canvas>
+</div>
+<div>
+    <canvas id="exChart" style="max-width:400px; max-height:430px;"></canvas>
 </div>
 
 @section Scripts {
@@ -98,14 +101,51 @@
 
             }
         })
+
+    </script> <br />
+
+    <script type="text/javascript">
+        $(function () {
+            // Call the function immediately when the document is ready
+            fetchDataAndRenderChart();
+
+            function fetchDataAndRenderChart() {
+                $.ajax({
+                    type: "POST",
+                    url: "/Sales/GetSalesData",
+                    data: "",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: OnSuccessResult,
+                    error: OnError
+                });
+            }
+
+            function OnSuccessResult(data) {
+                var _data = data;
+                var _chartLabels = _data[0];
+                var _chartData = _data[1];
+
+                var barColor = ["red", "green", "blue", "orange", "brown"];
+
+                new Chart("exChart", {
+                    type: "bar",
+                    data: {
+                        labels: _chartLabels,
+                        datasets: [{
+                            backgroundColor: barColor,
+                            data: _chartData
+                        }]
+                    }
+                });
+            }
+
+            function OnError(err) {
+                // Handle errors if needed
+            }
+        });
     </script>
 }
-
-
-
-
-
-
 
 
 

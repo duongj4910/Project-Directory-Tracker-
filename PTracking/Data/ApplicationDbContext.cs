@@ -12,5 +12,10 @@ namespace PTracking.Data
         }
 
         public DbSet<SalesEntity> SalesData { get; set; }
+
+        public DbSet<PTracking.Models.Tickets> Tickets { get; set; } = default!;
+
+        public DbSet<PTracking.Models.Employee> Employee { get; set; } = default!;
+        
     }
 }

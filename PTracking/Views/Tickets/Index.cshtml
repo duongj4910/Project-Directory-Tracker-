@@ -1,0 +1,387 @@
+﻿@model IEnumerable<PTracking.Models.Tickets>
+
+@{
+	ViewData["Title"] = "Active Tickets";
+}
+
+<h1>Index</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Description)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ProjectName)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Company)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UserAssigned)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.AssignedBy)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Status)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Priority)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Category)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.DueBy)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.UpdatedDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.StartDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.icon)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.MaxTicketsPerSprint)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.SprintStoryPointLimit)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.PointPerTicket)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Name)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Description)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ProjectName)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Company)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.UserAssigned)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.AssignedBy)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Status)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Priority)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.Category)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DueBy)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.UpdatedDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.StartDate)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.icon)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.MaxTicketsPerSprint)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.SprintStoryPointLimit)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.PointPerTicket)
+				</td>
+				<td>
+					<a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+					<a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+					<a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@*<h4>Active Tickets </h4>*@
+
+
+
+<div class="chart-container">
+	<canvas id="myChart" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="pieChart" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="userAssigned" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="priorityChart" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="bubble" style="max-width:400px; max-height:430px;"></canvas>
+</div>
+
+
+@section Scripts {
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+	<script>
+
+		$(function () {
+
+			$(function () {
+				const bubbleData = Array.from({ length: 10 }, () => ({
+					x: Math.random() * 100,
+					y: Math.random() * 100,
+					r: Math.random() * 20 // Radius of the bubble
+				}));
+
+				const bubbleConfig = {
+					type: 'bubble',
+					data: {
+						datasets: [{
+							label: 'Bubble Dataset',
+							data: bubbleData,
+							backgroundColor: 'rgba(255, 99, 132, 0.5)',
+							borderColor: 'rgba(255, 99, 132, 1)',
+							borderWidth: 1
+						}]
+					},
+					options: {
+						// Add chart options here if needed
+					}
+				};
+
+				const bubbleCtx = document.getElementById('bubble').getContext('2d');
+				new Chart(bubbleCtx, bubbleConfig);
+
+				// Rest of your chart code...
+			});
+
+
+			const DATA_COUNT = 7;
+			const labels = ['Build DB', 'UI Feature', 'Resolve Bugs', 'Label 4', 'Label 5', 'Label 6', 'Label 7'];
+			const sprintStoryPointData = [10, 10, 10, 10, 10, 10, 10]; // Replace with your data
+			const pointPerTicketData = [2, 4, 5, 3, 5, 5, 5]; // Replace with your data
+
+			var ctx = document.getElementById('priorityChart').getContext('2d');
+			var priorityChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: labels,
+					datasets: [
+						{
+							label: 'Sprint Story Point Total',
+							data: sprintStoryPointData,
+							backgroundColor: 'rgba(255, 99, 132, 0.7)',
+							borderColor: 'rgba(255, 99, 132, 1)',
+							borderWidth: 1
+						},
+						{
+							label: 'Point Per Ticket Total',
+							data: pointPerTicketData,
+							backgroundColor: 'rgba(54, 162, 235, 0.7)',
+							borderColor: 'rgba(54, 162, 235, 1)',
+							borderWidth: 1
+						}
+					]
+				},
+				options: {
+					scales: {
+						x: { stacked: true },
+						y: { stacked: true }
+					}
+				}
+			});
+
+			// This part is for the userAssigned chart
+			var userAssigned = @Html.Raw(Json.Serialize(Model.Select(m => m.UserAssigned)));
+			var memberCounts = {};
+			userAssigned.forEach(function (member) {
+				memberCounts[member] = (memberCounts[member] || 0) + 1;
+			});
+			var uniqueMembers = Object.keys(memberCounts);
+			var memberOccurrences = uniqueMembers.map(function (member) {
+				return memberCounts[member];
+			});
+
+			var memberColors = [
+				'rgba(255, 99, 132, 0.7)',
+				'rgba(54, 162, 235, 0.7)',
+				'rgba(255, 206, 86, 0.7)'
+				// Add more colors for additional members
+			];
+
+			var ctxUserAssigned = document.getElementById('userAssigned').getContext('2d');
+			var memberChart = new Chart(ctxUserAssigned, {
+				type: 'bar',
+				data: {
+					labels: uniqueMembers,
+					datasets: [{
+						label: 'Tickets Assigned',
+						data: memberOccurrences,
+						backgroundColor: memberColors.slice(0, uniqueMembers.length),
+						borderColor: 'rgba(54, 162, 235, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					// Add chart options here if needed
+				}
+			});
+
+			// This part is for the myChart based on AJAX
+			fetchDataAndRenderChart();
+
+			function fetchDataAndRenderChart() {
+				$.ajax({
+					type: "POST",
+					url: "/Tickets/GetPointsData",
+					data: "",
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					success: OnSuccessResult,
+					error: OnError
+				});
+			}
+
+			function OnSuccessResult(data) {
+				var _data = data;
+				var _chartLabels = _data[0];
+				var _chartData = _data[1];
+				var ticketNames = _chartLabels.map(function (label) {
+					return 'Ticket ' + label;
+				});
+				var barColor = ["red", "green", "blue", "orange", "brown"];
+
+
+
+				var ctxMyChart = document.getElementById('myChart').getContext('2d');
+				var myChart = new Chart(ctxMyChart, {
+					type: "bar",
+					data: {
+						labels: ticketNames,
+						datasets: [{
+							backgroundColor: barColor,
+							data: _chartData
+						}]
+					}
+				});
+			}
+
+			function OnError(err) {
+				// Handle errors here
+			}
+		});
+	</script>
+
+
+	<script>
+		$(function () {
+			fetchDataAndRenderChart();
+
+			function fetchDataAndRenderChart() {
+				$.ajax({
+					type: "POST",
+					url: "/Tickets/GetCompletionData",
+					data: "",
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					success: OnSuccessResult,
+					error: OnError
+				});
+			}
+
+			function OnSuccessResult(data) {
+				var _data = data;
+				var _chartLabels = _data[0];
+				var _chartData = _data[1];
+
+				var statusColors = [
+					'rgba(75, 192, 192, 0.7)', // Color for completed
+					'rgba(255, 99, 132, 0.7)', // Color for incomplete
+					'rgba(255, 206, 86, 0.7)' // Color for in progress
+
+					// Add more colors for additional statuses if needed
+				];
+
+				new Chart("pieChart", {
+					type: "pie",
+					data: {
+						labels: _chartLabels,
+						datasets: [{
+							data: _chartData,
+							backgroundColor: statusColors
+						}]
+					},
+					options: {
+						// Add chart options here if needed
+					}
+				});
+			}
+
+			function OnError(err) {
+				// Handle errors here
+			}
+
+
+		});
+	</script>
+}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function () {
+		$.ajax({
+			type: "GET",
+			url: "/Tickets/GetEmployees", // Adjust the URL based on your routing
+			contentType: "application/json; charset=utf-8",
+			dataType: "json",
+			success: function (data) {
+				if (data && data.length > 0) {
+					var employeeTable = "<table>"; // Create an HTML table to display employee data
+					employeeTable += "<tr><th>Name</th><th>Email</th></tr>"; // Table header
+
+					// Loop through the retrieved employees and create table rows
+					data.forEach(function (employee) {
+						employeeTable += "<tr>";
+						employeeTable += "<td>" + employee.Name + "</td>"; // Adjust properties based on your model
+						employeeTable += "<td>" + employee.Email + "</td>"; // Adjust properties based on your model
+						employeeTable += "</tr>";
+					});
+
+					employeeTable += "</table>"; // Close the table
+					$("#employeeData").html(employeeTable); // Display the table in a specific element (e.g., <div id="employeeData"></div>)
+				} else {
+					// Handle empty or no data case
+					$("#employeeData").html("No employee data available.");
+				}
+			},
+			error: function (err) {
+				// Handle errors here
+				console.error(err);
+			}
+		});
+	});
+</script>
