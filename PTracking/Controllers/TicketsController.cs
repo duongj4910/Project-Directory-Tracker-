@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PTracking.Data;
 using PTracking.Models;
+using PTracking.ViewModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static NuGet.Packaging.PackagingConstants;
 
@@ -21,14 +22,16 @@ namespace PTracking.Controllers
             _context = context;
         }
 
-        // GET: Tickets
+
+
+        //GET: Tickets
         public async Task<IActionResult> Index()
         {
             return View(await _context.Tickets.ToListAsync());
 
         }
 
-		[HttpGet]
+        [HttpGet]
 		public IActionResult GetEmployees()
 		{
 			var employees = _context.Employee.ToList(); // Retrieve employees from your database
