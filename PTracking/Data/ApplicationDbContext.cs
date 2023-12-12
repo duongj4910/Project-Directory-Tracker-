@@ -16,6 +16,8 @@ namespace PTracking.Data
         public DbSet<PTracking.Models.Tickets> Tickets { get; set; } = default!;
 
         public DbSet<PTracking.Models.Employee> Employee { get; set; } = default!;
+
+        public DbSet<PTracking.Models.Project> Project { get; set; } = default!;
         
     }
 }
