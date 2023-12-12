@@ -22,37 +22,85 @@ namespace PTracking.Controllers
             _context = context;
         }
 
-
-
-        //GET: Tickets
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.Tickets.ToListAsync());
-
-        }
-
-        [HttpGet]
-		public IActionResult GetEmployees()
+		public async Task<IActionResult> Index()
 		{
+			// Retrieve tickets data
+			var tickets = await _context.Tickets.ToListAsync();
+
+			// Retrieve other necessary data
+			int activeTicketCount = _context.Tickets.Count(ticket => ticket.Status == "Incomplete");
+			// Other data retrieval logic...
+
+			// Store data in ViewBag
+			ViewBag.Tickets = tickets;
+			ViewBag.ActiveTicketCount = activeTicketCount;
+
+			// Get completion data
+			int completeCount = _context.Tickets.Count(p => p.Status == "Completed");
+			int incompleteCount = _context.Tickets.Count(p => p.Status == "Incomplete");
+			int inProgressCount = _context.Tickets.Count(p => p.Status == "In Progress");
+
+			// Store completion data in a structured object
+			var completionData = new
+			{
+				Labels = new List<string> { "Complete", "Incomplete", "In Progress" },
+				TicketCounts = new List<int> { completeCount, incompleteCount, inProgressCount }
+			};
+
+			// Assign the structured data to ViewBag
+			ViewBag.ChartLabels = completionData.Labels; // Use ViewBag.ChartLabels instead of ViewBag.CompletionData
+			ViewBag.ChartData = completionData.TicketCounts; // Use ViewBag.ChartData instead of ViewBag.CompletionData
+
+
+			//get employee 
 			var employees = _context.Employee.ToList(); // Retrieve employees from your database
-			return Json(employees); // Return employees as JSON
+
+			// Assign employees to ViewBag in the desired format
+			ViewBag.Employees = employees.Select(emp => new
+			{
+				Name = emp.Name,
+				Email = emp.Email,
+				Availability = emp.Availability
+			});
+
+
+			var ticketsByUser = _context.Tickets
+	  .GroupBy(t => t.UserAssigned)
+	  .Select(g => new { User = g.Key, Count = g.Count() })
+	  .ToList();
+
+			var uniqueMembers = ticketsByUser.Select(entry => entry.User).ToList();
+			var memberOccurrences = ticketsByUser.Select(entry => entry.Count).ToList();
+
+			ViewBag.UniqueMembers = uniqueMembers; // Use ViewBag to store unique members
+			ViewBag.MemberOccurrences = memberOccurrences; // Use ViewBag to store member occurrences
+
+
+
+
+			return View();
+
 		}
 
 
-		public async Task<IActionResult> ShowTicketSearch()
-        {
-            return View();
-        }
-
-        // POST: ProjectDatas  changeed String to string
-        public async Task<IActionResult> ShowTicketSearchResults(string SearchPhrase)
-        {
-            return View("Index", await _context.Tickets.Where(x => x.Name.Contains
-            (SearchPhrase)).ToListAsync());
-        }
 
 
-        [HttpPost]
+		////GET: Tickets
+		//public async Task<IActionResult> Index()
+		//{
+		//    return View(await _context.Tickets.ToListAsync());
+
+		//}
+
+		//[HttpGet]
+		//public IActionResult GetEmployees()
+		//{
+		//	var employees = _context.Employee.ToList(); // Retrieve employees from your database
+		//	return Json(employees); // Return employees as JSON
+		//}
+
+
+		[HttpPost]
         public List<object> GetPointsData()
         {
             List<object> data = new List<object>();
@@ -72,50 +120,58 @@ namespace PTracking.Controllers
         }
 
 
-        [HttpPost]
-        public List<object> GetCompletionData()
-        {
-            
-                List<object> data = new List<object>();
+		//[HttpPost]
+		//public List<object> GetCompletionData()
+		//{
 
-                // Get counts of Complete and Incomplete tickets
-                int completeCount = _context.Tickets.Count(p => p.Status == "Completed");
-                int incompleteCount = _context.Tickets.Count(p => p.Status == "Incomplete");
-            int inProgressCount = _context.Tickets.Count(p => p.Status == "In Progress");
-            // Create labels and corresponding data
-            List<string> labels = new List<string> { "Complete", "Incomplete", "In Progress" };
-                List<int> ticketCounts = new List<int> { completeCount, incompleteCount, inProgressCount };
+		//        List<object> data = new List<object>();
 
-                // Add labels and counts to data list
-                data.Add(labels);
-                data.Add(ticketCounts);
+		//        // Get counts of Complete and Incomplete tickets
+		//        int completeCount = _context.Tickets.Count(p => p.Status == "Completed");
+		//        int incompleteCount = _context.Tickets.Count(p => p.Status == "Incomplete");
+		//    int inProgressCount = _context.Tickets.Count(p => p.Status == "In Progress");
+		//    // Create labels and corresponding data
+		//    List<string> labels = new List<string> { "Complete", "Incomplete", "In Progress" };
+		//        List<int> ticketCounts = new List<int> { completeCount, incompleteCount, inProgressCount };
 
-                return data;
+		//        // Add labels and counts to data list
+		//        data.Add(labels);
+		//        data.Add(ticketCounts);
 
-        }
+		//        return data;
 
-        // This method will be a part of your Controller
-        [HttpPost]
-        public List<object> GetUserAssigned()
-        {
-            var ticketsByUser = _context.Tickets
-                .GroupBy(t => t.UserAssigned)
-                .Select(g => new { User = g.Key, Count = g.Count() })
-                .ToList();
+		//}
 
-            List<object> data = new List<object>();
+		// This method will be a part of your Controller
+		
+			[HttpPost]
+			public IActionResult GetUserAssigned()
+			{
+				var ticketsByUser = _context.Tickets
+					.GroupBy(t => t.UserAssigned)
+					.Select(g => new { User = g.Key, Count = g.Count() })
+					.ToList();
 
-            List<string> users = ticketsByUser.Select(entry => entry.User).ToList();
-            List<int> counts = ticketsByUser.Select(entry => entry.Count).ToList();
+				var ticketNames = _context.Tickets
+					.Select(t => t.Name)
+					.Distinct()
+					.ToList();
 
-            data.Add(users.Cast<object>().ToList()); // Convert users list to a list of objects
-            data.Add(counts.Cast<object>().ToList()); // Convert counts list to a list of objects
+				List<object> data = new List<object>();
 
-            return data;
-        }
+				List<string> users = ticketsByUser.Select(entry => entry.User).ToList();
+				List<int> counts = ticketsByUser.Select(entry => entry.Count).ToList();
+
+				data.Add(ticketNames);
+				data.Add(counts);
+
+				return Json(new { chartLabels = ticketNames, chartData = counts });
+			}
+
+		
 
 
-        public ActionResult PriorityChartData()
+		public ActionResult PriorityChartData()
         {
             var priorityData = _context.Tickets
                 .GroupBy(t => t.Priority)
@@ -131,14 +187,17 @@ namespace PTracking.Controllers
         }
 
 
+        public async Task<IActionResult> ShowTicketSearch()
+        {
+            return View();
+        }
 
-
-
-
-
-
-
-
+        // POST: ProjectDatas  changeed String to string
+        public async Task<IActionResult> ShowTicketSearchResults(string SearchPhrase)
+        {
+            return View("Index", await _context.Tickets.Where(x => x.Name.Contains
+            (SearchPhrase)).ToListAsync());
+        }
 
 
 
