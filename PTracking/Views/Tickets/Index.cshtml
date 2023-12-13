@@ -6,6 +6,37 @@
 
 <h1>Index</h1>
 
+<div class="Dashboard row">
+	<div class="col-sm-4 mb-3">
+		<div class="card bg-danger text-white rounded">
+			<div class="card-body">
+				<h6 class="card-title">Active Tickets</h6>
+				<p class="card-text">@ViewBag.ActiveTicketCount</p>
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-4 mb-3">
+		<div class="card bg-warning text-dark rounded">
+			<div class="card-body">
+				<h6 class="card-title">Total of High Priority Tickets</h6>
+				<p class="card-text">@ViewBag.PriorityTickets</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-sm-4 mb-3">
+		<div class="card bg-success text-white rounded">
+			<div class="card-body">
+				<h6 class="card-title">Tickets Per Sprint </h6>
+				<p class="card-text">@ViewBag.PerSprint</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+
 <p>
 	<a asp-action="Create">Create New</a>
 </p>
@@ -97,7 +128,7 @@
 
 @*<h4>Active Tickets </h4>*@
 
-<div id="activeTicketCount">@ViewBag.ActiveTicketCount</div>
+
 
 
 
@@ -211,7 +242,7 @@
 			data: {
 				labels: uniqueMembers,
 				datasets: [{
-					label: 'Tickets Assigned',
+					label: 'Number of Tickets Assigned',
 					data: memberOccurrences,
 					backgroundColor: memberColors.slice(0, uniqueMembers.length),
 					borderColor: 'rgba(54, 162, 235, 1)',

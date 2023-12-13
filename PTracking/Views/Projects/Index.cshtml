@@ -3,8 +3,34 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="Dashboard row">
+    <div class="col-sm-4 mb-3">
+        <div class="card bg-danger text-white rounded">
+            <div class="card-body">
+                <h6 class="card-title">Incomplete Projects</h6>
+                <p class="card-text">@ViewBag.IncompleteCount</p>
+            </div>
+        </div>
+    </div>
 
-<h1>Index</h1>
+    <div class="col-sm-4 mb-3">
+        <div class="card bg-warning text-dark rounded">
+            <div class="card-body">
+                <h6 class="card-title">In Progress Projects</h6>
+                <p class="card-text">@ViewBag.InProgressCount</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 mb-3">
+        <div class="card bg-success text-white rounded">
+            <div class="card-body">
+                <h6 class="card-title">Complete Projects</h6>
+                <p class="card-text">@ViewBag.CompleteCount</p>
+            </div>
+        </div>
+    </div>
+</div>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -13,100 +39,90 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Description)
+               Description
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProjectName)
+               Project Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Company)
+               Company
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UsersAssigned)
+               Users Assigned
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AssignedBy)
+               Assigned By
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Status)
+               Status
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StatusMessage)
+               Status Message
+            </th>
+           
+            <th>
+              Priority
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Completion)
+              Category
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Priority)
+               DueBy
             </th>
+
             <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DueBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StartDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.icon)
+               icon
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
+@if (ViewBag.Project != null) 
+        {
+            @foreach (var item in ViewBag.Project)
+
+		{
+			<tr>
+       
             <td>
-                @Html.DisplayFor(modelItem => item.Name)
+                @item.Name
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @item.Description
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ProjectName)
+                @item.ProjectName
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Company)
+                @item.Company
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.UsersAssigned)
+                @item.UsersAssigned
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AssignedBy)
+                @item.AssignedBy
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Status)
+                @item.Status
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.StatusMessage)
+                @item.StatusMessage
+            </td>
+         
+            <td>
+                @item.Priority
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Completion)
+                @item.Category
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Priority)
+                @item.DueBy
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Category)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DueBy)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UpdatedDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.icon)
+                @item.icon
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
@@ -114,6 +130,203 @@
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
             </td>
         </tr>
-}
+            }
+        }
+        else
+        { 
+        <tr>
+		<td colspan="14">No tickets available</td>
+			</tr>
+		}
     </tbody>
 </table>
+
+
+<div class="chart-container">
+
+    <canvas id="activeProjects" style="max-width:400px; max-height:430px;"></canvas>
+    <canvas id="userAssigned" style="max-width:400px; max-height:430px;"></canvas>
+    <canvas id="lineChart" style="max-width:400px; max-height:430px;"></canvas>
+    <canvas id="ticketNamesChart" style="max-width:400px; max-height:430px;"></canvas>
+    <canvas id="categoryProjects" style="max-width:400px; max-height:430px;"></canvas>
+
+</div>
+@{
+    var uniqueMonths = ViewBag.UniqueMonths as List<string>;
+    var numOfProjects = ViewBag.NumOfProjects as List<int>;
+}
+
+@section Scripts {
+	<!-- Include necessary libraries -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script>
+		// Get data from ViewBag
+		var chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
+		var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+
+		var statusColors = [
+			'rgba(75, 192, 192, 0.7)', // Color for completed
+			'rgba(255, 99, 132, 0.7)', // Color for incomplete
+			'rgba(255, 206, 86, 0.7)' // Color for in progress
+			// Add more colors for additional statuses if needed
+		];
+
+        var activeProjectsChart = new Chart(document.getElementById('activeProjects'), {
+			type: 'pie',
+			data: {
+				labels: chartLabels,
+				datasets: [{
+					data: chartData,
+					backgroundColor: statusColors
+				}]
+			},
+			options: {
+				// Add chart options here if needed
+			}
+		});
+	</script>
+
+    <script>
+               
+                var uniqueMembers = @Html.Raw(Json.Serialize(ViewBag.UniqueMembers));
+        var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
+
+        var memberColors = [
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 206, 86, 0.7)'
+            // Add more colors for additional members
+        ];
+
+        var ctxUserAssigned = document.getElementById('userAssigned').getContext('2d');
+        var memberChart = new Chart(ctxUserAssigned, {
+            type: 'bar',
+            data: {
+                labels: uniqueMembers,
+                datasets: [{
+                    label: 'Tickets Assigned',
+                    data: memberOccurrences,
+                    backgroundColor: memberColors.slice(0, uniqueMembers.length),
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                // Add chart options here if needed
+            }
+        });
+
+    </script>
+    
+    <script>
+   
+            var ctxLineChart = document.getElementById('lineChart').getContext('2d');
+
+        var lineChart = new Chart(ctxLineChart, {
+            type: 'line',
+            data: {
+                labels: @Html.Raw(Json.Serialize(uniqueMonths)),
+                datasets: [{
+                    label: 'Number of Projects',
+                    data: @Html.Raw(Json.Serialize(numOfProjects)),
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        // Get data from ViewBag
+        var categoryLabels = @Html.Raw(Json.Serialize(ViewBag.CategoryList));
+        var categoryData = @Html.Raw(Json.Serialize(ViewBag.CategoryCt));
+
+        var statusColors = [
+            'rgba(75, 192, 192, 0.7)', // Color for completed
+            'rgba(255, 99, 132, 0.7)', // Color for incomplete
+            'rgba(255, 206, 86, 0.7)' // Color for in progress
+            // Add more colors for additional statuses if needed
+        ];
+
+        var activeCategoryChart = new Chart(document.getElementById('categoryProjects'), {
+            type: 'pie',
+            data: {
+                labels: categoryLabels,
+                datasets: [{
+                    data: categoryData,
+                    backgroundColor: statusColors
+                }]
+            },
+            options: {
+                // Add chart options here if needed
+            }
+        });
+    </script>
+
+    }
+
+
+
+
+
+
+<!-- Your HTML content -->
+<div id="employeeData">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th> Status </th>
+                <!-- Add other column headers here -->
+            </tr>
+        </thead>
+        <tbody>
+            @if (ViewBag.Employees != null)
+            {
+                foreach (var employee in ViewBag.Employees)
+                {
+                    <tr>
+                        <td>@employee.Name</td>
+                        <td>@employee.Email</td>
+                        <td>
+                            @if (employee.Availability == "Available")
+                            {
+                                <button type="button" class="btn btn-success custom-btn">Available</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-danger custom-btn">Unavailable</button>
+                            }
+                        </td>
+                        @*	<td>
+                <a asp-action="Edit" asp-route-id="@employee.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@employee.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@employee.ID">Delete</a>
+                </td>*@
+                        <!-- Add other columns using employee properties -->
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="2">No employee data available</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,108 @@ namespace PTracking.Controllers
         // GET: Projects
         public async Task<IActionResult> Index()
         {
-              return _context.Project != null ? 
-                          View(await _context.Project.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Project'  is null.");
+            var projects = await _context.Project.ToListAsync();
+
+            // Retrieve other necessary data
+            //int activeProjectCount = _context.Tickets.Count(project => project.Status == "In Progress");
+
+            //int inActiveProjectCount = _context.Tickets.Count(project => project.Status == "Incomplete");
+
+            // Other data retrieval logic...
+
+            // Store data in ViewBag
+                //ViewBag.Project = projects;
+                //ViewBag.ActiveProjectCount = activeProjectCount;
+                //ViewBag.InactiveProjectCount = inActiveProjectCount;
+
+            // Get completion data
+            int completeCount = _context.Project.Count(p => p.Status == "Completed");
+            int incompleteCount = _context.Project.Count(p => p.Status == "Incomplete");
+            int inProgressCount = _context.Project.Count(p => p.Status == "In Progress");
+
+            ViewBag.Project = projects;
+            ViewBag.CompleteCount = completeCount;
+            ViewBag.IncompleteCount = incompleteCount;
+            ViewBag.InProgressCount = inProgressCount;
+
+
+            // Store completion data in a structured object
+            var completionData = new
+            {
+                Labels = new List<string> { "Complete", "Incomplete", "In Progress" },
+                ProjectCounts = new List<int> { completeCount, incompleteCount, inProgressCount }
+            };
+
+            ViewBag.ChartLabels = completionData.Labels;
+            ViewBag.ChartData = completionData.ProjectCounts;
+
+            var projectsWithNonNullUsers = _context.Project
+            .Where(p => p.UsersAssigned != null) // Filter out null UsersAssigned
+            .ToList(); // Retrieve projects first 
+
+            var projectsByUser = projectsWithNonNullUsers
+        .SelectMany(p => p.UsersAssigned.Split(',')) // Split users by ',' to count each user separately
+        .Select(user => user.Trim()) // Trim to remove whitespace
+        .GroupBy(user => user) // Group by individual user
+        .Select(g => new { User = g.Key, Count = g.Count() })
+        .ToList();
+
+            var uniqueMembers = projectsByUser.Select(entry => entry.User).ToList();
+            var memberOccurrences = projectsByUser.Select(entry => entry.Count).ToList();
+
+            ViewBag.UniqueMembers = uniqueMembers;
+            ViewBag.MemberOccurrences = memberOccurrences;
+
+
+            var projectsByMonth = _context.Project
+    .GroupBy(p => p.StartDate) // Group by StartDate
+    .Select(g => new { StartDate = g.Key, ProjectCount = g.Count() })
+    .OrderBy(entry => entry.StartDate) // Optional: Order by StartDate
+    .ToList();
+
+            var uniqueMonths = _context.Project
+     .Select(p => p.StartDate)
+     .Distinct()
+     .ToList();
+
+            var numOfProjects = projectsByMonth.Select(entry=>entry.ProjectCount).ToList();
+
+            ViewBag.UniqueMonths = uniqueMonths;
+            ViewBag.NumOfProjects = numOfProjects;
+
+           
+            int energryCount = _context.Project.Count(p => p.Category == "Energy Technology");
+            int itCount = _context.Project.Count(p => p.Category == "Information and Technology");
+            int cloudCount = _context.Project.Count(p => p.Category == "Cloud Services");
+
+
+            var categoryData = new
+            {
+                CategoryLabels = new List<string> { "Energy Technology", "Information and Technology", "Cloud Services" },
+                CategoryCounts = new List<int> { energryCount, itCount, cloudCount }
+            };
+
+            ViewBag.CategoryList = categoryData.CategoryLabels;
+            ViewBag.CategoryCt = categoryData.CategoryCounts;
+
+
+
+            //get employee 
+            var employees = _context.Employee.ToList(); // Retrieve employees from your database
+
+            // Assign employees to ViewBag in the desired format
+            ViewBag.Employees = employees.Select(emp => new
+            {
+                Name = emp.Name,
+                Email = emp.Email,
+                Availability = emp.Availability
+            });
+
+
+
+
+
+            return View();
         }
 
         // GET: Projects/Details/5
@@ -150,14 +250,14 @@ namespace PTracking.Controllers
             {
                 _context.Project.Remove(project);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ProjectExists(int id)
         {
-          return (_context.Project?.Any(e => e.ID == id)).GetValueOrDefault();
+            return (_context.Project?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }

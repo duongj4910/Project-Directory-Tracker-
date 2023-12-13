@@ -18,45 +18,44 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    padding: 40px 40px 60px;
 }
-
 
 .chart-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px; /* Adjust the gap between charts */
+    gap: 20px; 
 }
 .table1 {
     border-collapse: collapse;
     width: 100%;
-    max-width: 400px; /* Limiting maximum width */
-    max-height: 430px; /* Limiting maximum height */
-    overflow: auto; /* Adding scrollbars if content exceeds max height */
-    /* Modern table styles */
-    border-radius: 10px; /* Rounded edges */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Shadow effect */
+    max-width: 400px; 
+    max-height: 430px; 
+    overflow: auto; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
 }
 
     .table1 th,
     .table1 td {
         padding: 12px;
         text-align: left;
-        border-bottom: 1px solid #ddd; /* Bottom border for cells */
+        border-bottom: 1px solid #ddd; 
     }
 
     .table1 th {
-        background-color: #f2f2f2; /* Header background color */
-        border-top-left-radius: 10px; /* Rounded corners for header */
+        background-color: #f2f2f2; 
+        border-top-left-radius: 10px; 
         border-top-right-radius: 10px;
     }
 
-    /* Alternate row background color for better readability */
+    
     .table1 tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
 
-    /* Hover effect */
+
     .table1 tbody tr:hover {
         background-color: #e5e5e5;
     }
@@ -65,24 +64,23 @@ body {
 .table {
     border-collapse: collapse;
     width: 100%;
-    max-width: 100%; /* To maintain full width */
-    max-height: 430px; /* Limiting maximum height */
-    overflow: auto; /* Adding scrollbars if content exceeds max height */
-    /* Modern table styles */
-    border-radius: 10px; /* Rounded edges */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Shadow effect */
+    max-width: 100%; 
+    max-height: 430px; 
+    overflow: auto; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
 }
 
     .table th,
     .table td {
         padding: 12px;
         text-align: left;
-        border-bottom: 1px solid #ddd; /* Bottom border for cells */
+        border-bottom: 1px solid #ddd; 
     }
 
     .table th {
-        background-color: #f2f2f2; /* Header background color */
-        border-top-left-radius: 10px; /* Rounded corners for header */
+        background-color: #f2f2f2; 
+        border-top-left-radius: 10px; 
         border-top-right-radius: 10px;
     }
 
@@ -98,21 +96,21 @@ body {
 
 {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); /* Responsive grid layout */
-    gap: 20px; /* Spacing between charts */
-    max-width: 100%; /* To maintain full width */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 20px; 
+    max-width: 100%; 
 }
 
 .chart-container canvas {
     width: 100%;
-    max-width: 400px; /* Limiting maximum width */
-    max-height: 430px; /* Limiting maximum height */
-    border-radius: 10px; /* Rounded edges */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Shadow effect */
+    max-width: 400px; 
+    max-height: 430px; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
 }
-/* Custom styles for the Unavailable button */
+
 .custom-btn {
-    border-radius: 10px; /* Rounded edges */
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Shadow effect */
-    /* Additional styles can be added here */
+    border-radius: 10px; 
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
+
 }

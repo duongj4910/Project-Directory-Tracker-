@@ -29,11 +29,14 @@ namespace PTracking.Controllers
 
 			// Retrieve other necessary data
 			int activeTicketCount = _context.Tickets.Count(ticket => ticket.Status == "Incomplete");
-			// Other data retrieval logic...
+            int priorityTickets = _context.Tickets.Count(ticket => ticket.Priority == "High");
+            int perSprint = _context.Tickets.Count();
 
 			// Store data in ViewBag
 			ViewBag.Tickets = tickets;
 			ViewBag.ActiveTicketCount = activeTicketCount;
+            ViewBag.PriorityTickets = priorityTickets;
+            ViewBag.PerSprint = perSprint;
 
 			// Get completion data
 			int completeCount = _context.Tickets.Count(p => p.Status == "Completed");
@@ -50,6 +53,9 @@ namespace PTracking.Controllers
 			// Assign the structured data to ViewBag
 			ViewBag.ChartLabels = completionData.Labels; // Use ViewBag.ChartLabels instead of ViewBag.CompletionData
 			ViewBag.ChartData = completionData.TicketCounts; // Use ViewBag.ChartData instead of ViewBag.CompletionData
+
+
+
 
 
 			//get employee 
