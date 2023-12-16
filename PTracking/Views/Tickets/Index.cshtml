@@ -4,201 +4,205 @@
 	ViewData["Title"] = "Active Tickets";
 }
 
-<h1>Index</h1>
+<html>
+<head>
+	<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+	<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+	
+</head>
+<body>
 
-<div class="Dashboard row">
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-danger text-white rounded">
-			<div class="card-body">
-				<h6 class="card-title">Active Tickets</h6>
-				<p class="card-text">@ViewBag.ActiveTicketCount</p>
-				
+	<div class="container-fluid">
+		<div class="row">
+			<!-- Cards section -->
+			<div class="col-md-4 mb-3">
+				<div class="card bg-danger text-white rounded">
+					<div class="card-body">
+						<h6 class="card-title">
+							<a href="@Url.Action("DisplayActiveTickets", "Tickets")" class="text-white">Active Tickets</a>
+						</h6>
+						<p class="card-text">@ViewBag.ActiveTicketCount</p>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-warning text-dark rounded">
-			<div class="card-body">
-				<h6 class="card-title">Total of High Priority Tickets</h6>
-				<p class="card-text">@ViewBag.PriorityTickets</p>
+			<div class="col-md-4 mb-3">
+				<div class="card bg-warning text-dark rounded">
+					<div class="card-body">
+						<h6 class="card-title">
+							<a href="@Url.Action("DisplayPriority", "Tickets")" class="text-white">Total of High Priority Tickets </a>
+						</h6>
+						<p class="card-text">@ViewBag.PriorityTickets</p>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-success text-white rounded">
-			<div class="card-body">
-				<h6 class="card-title">Tickets Per Sprint </h6>
-				<p class="card-text">@ViewBag.PerSprint</p>
+			<div class="col-md-4 mb-3">
+				<div class="card bg-success text-white rounded">
+					<div class="card-body">
+						<h6 class="card-title">
+							<a href="@Url.Action("DisplayTicketsBySprint", "Tickets")" class="text-white"> Tickets Per Sprint </a>
+						</h6>
+						<p class="card-text">@ViewBag.PerSprint</p>
+					</div>
+				</div>
 			</div>
-		</div>
-	</div>
-</div>
-
-
-<p>
-	<a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-	<thead>
-		<tr>
-			<th>
-				 Name
-			</th>
-			<th>
-				 Description
-			</th>
-			<th>
-				 ProjectName
-			</th>
-			<th>
-				 Company
-			</th>
-			<th>
-				 User Assigned
-			</th>
-			<th>
-				 Assigned By
-			</th>
-			<th>
-				Status
-			</th>
-			<th>
-				Priority
-			</th>
-			<th>
-				Category
-			</th>
-			<th>
-				DueBy
-			</th>
-			<th>
-				Updated Date
-			</th>
-			<th>
-				Start Date
-			</th>
-			<th>
-				 Icon
-			</th>
-
-		</tr>
-	</thead>
-	<tbody>
-		@if (ViewBag.Tickets != null) 
-        {
-            @foreach (var item in ViewBag.Tickets)
-
-		{
-			<tr>
-					<td>@item.Name</td>
-					<td>@item.Description</td>
-					<td>@item.ProjectName</td>
-					<td>@item.Company</td>
-					<td>@item.UserAssigned</td>
-					<td>@item.AssignedBy</td>
-					<td>@item.Status</td>
-					<td>@item.Priority</td>
-					<td>@item.Category</td>
-					<td>@item.DueBy</td>
-					<td>@item.UpdatedDate</td>
-					<td>@item.StartDate</td>
-					<td>@item.icon</td>
-					<td>
-						<a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-						<a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-						<a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-					</td>
-				</tr>
-			}
-		}
-		else
-		{
-			<tr>
-				<td colspan="14">No tickets available</td>
-			</tr>
-		}
-	</tbody>
-</table>
-
-@{
-	Layout = "~/Views/Shared/_Layout.cshtml";
-}
-
-@*<h4>Active Tickets </h4>*@
-
-
-
-
-
-<div class="chart-container">
-
-	<canvas id="myChart" style="max-width:400px; max-height:430px;"></canvas>
-	<canvas id="pieChart" style="max-width:400px; max-height:430px;"></canvas>
-	<canvas id="userAssigned" style="max-width:400px; max-height:430px;"></canvas>
-	<canvas id="priorityChart" style="max-width:400px; max-height:430px;"></canvas>
-	<canvas id="ticketNamesChart" style="max-width:400px; max-height:430px;"></canvas>
-
-</div>
-
-
-<!-- Your HTML content -->
-<div id="employeeData">
-	<table class="table">
-		<thead>
-			<tr>
-				<th>Name</th>
-				<th>Email</th>
-				<th> Status </th>
-				<!-- Add other column headers here -->
-			</tr>
-		</thead>
-		<tbody>
-			@if (ViewBag.Employees != null)
-			{
-				foreach (var employee in ViewBag.Employees)
-				{
-					<tr>
-						<td>@employee.Name</td>
-						<td>@employee.Email</td>
-						<td>
-							@if (employee.Availability == "Available")
+			<!-- Charts and data section -->
+			<div class="col-md-6">
+				<div class="row">
+					<div class="chart col-md-12">
+						<canvas id="ticketComplete" class="chart-canvas"></canvas>
+					</div>
+					<div class="chart col-md-12">
+						<canvas id="pieChart" class="chart-canvas"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div id="employeeData">
+					<table class="table table1">
+						<thead>
+							<tr>
+								<th></th>
+								<th>Name</th>
+								<th>Email</th>
+								<th>Status</th>
+							</tr>
+						</thead>
+						<tbody>
+							@if (ViewBag.Employees != null)
 							{
-								<button type="button" class="btn btn-success custom-btn">Available</button>
+								foreach (var employee in ViewBag.Employees)
+								{
+									<tr>
+										<td><img src="@employee.icon" alt="User Image" /></td>
+										<td>@employee.Name</td>
+										<td>@employee.Email</td>
+										<td>
+											@if (employee.Availability == "Available")
+											{
+												<button type="button" class="btn btn-success custom-btn">Available</button>
+											}
+											else
+											{
+												<button type="button" class="btn btn-danger custom-btn">Unavailable</button>
+											}
+										</td>
+									</tr>
+								}
 							}
 							else
 							{
-								<button type="button" class="btn btn-danger custom-btn">Unavailable</button>
+								<tr>
+									<td colspan="4">No employee data available</td>
+								</tr>
 							}
-						</td>
-					@*	<td>
-							<a asp-action="Edit" asp-route-id="@employee.ID">Edit</a> |
-							<a asp-action="Details" asp-route-id="@employee.ID">Details</a> |
-							<a asp-action="Delete" asp-route-id="@employee.ID">Delete</a>
-						</td>*@
-						<!-- Add other columns using employee properties -->
+						</tbody>
+					</table>
+				</div>
+				<div>
+					<canvas id="userAssigned" class="chart-canvas"></canvas>
+					<canvas id="ticketNamesChart" class="chart-canvas"></canvas>
+				</div>
+			</div>
+
+
+	@{
+
+		var ticketList = ViewBag.Tickets as IEnumerable<Tickets>;
+	}
+
+	<div class="table-responsive" style="overflow-x: auto;">
+		<table id="ticketsTable" class="table table-responsive table-bordered">	
+			<thead>
+
+				<tr>
+					<th>
+						Name
+					</th>
+					<th>
+						Description
+					</th>
+					<th>
+						ProjectName
+					</th>
+					<th>
+						Company
+					</th>
+					<th>
+						User Assigned
+					</th>
+					<th>
+						Assigned By
+					</th>
+					<th>
+						Status
+					</th>
+					<th>
+						Priority
+					</th>
+					<th>
+						Category
+					</th>
+					<th>
+						DueBy
+					</th>
+					<th>
+						Start Date
+					</th>
+				</tr>
+			</thead>>
+			<tbody>
+				@if (ViewBag.Tickets != null)
+				{
+					@foreach (var item in ViewBag.Tickets)
+					{
+
+						<tr>
+							<td>@item.Name</td>
+							<td>@item.Description</td>
+							<td>@item.ProjectName</td>
+							<td>@item.Company</td>
+							<td>@item.UserAssigned</td>
+							<td>@item.AssignedBy</td>
+							<td>@item.Status</td>
+							<td>@item.Priority</td>
+							<td>@item.Category</td>
+							<td>@item.DueBy</td>
+							<td>@item.StartDate</td>
+
+
+						</tr>
+					}
+				}
+				else
+				{
+					<tr>
+						<td colspan="14">No tickets available</td>
 					</tr>
 				}
-			}
-			else
-			{
-				<tr>
-					<td colspan="2">No employee data available</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-</div>
+			</tbody>
+		</table>
+	</div>
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+	<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+
+
+
+
 
 
 
 @section Scripts {
-	<!-- Include necessary libraries -->
+	<script> 
+		$(document).ready( function () {
+				$.noConflict();
+			$('#ticketsTable').DataTable();
+		} );
+		</script>
+	
+
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 	<script>
-		// Get data from ViewBag
 		var chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
 		var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
 
@@ -206,7 +210,7 @@
 			'rgba(75, 192, 192, 0.7)', // Color for completed
 			'rgba(255, 99, 132, 0.7)', // Color for incomplete
 			'rgba(255, 206, 86, 0.7)' // Color for in progress
-			// Add more colors for additional statuses if needed
+			
 		];
 
 		var pieChart = new Chart(document.getElementById('pieChart'), {
@@ -219,13 +223,13 @@
 				}]
 			},
 			options: {
-				// Add chart options here if needed
+				
 			}
 		});
 	</script>
 
 	<script>
-		// This part is for the userAssigned chart
+		
 		var uniqueMembers = @Html.Raw(Json.Serialize(ViewBag.UniqueMembers));
 		var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
 
@@ -233,7 +237,7 @@
 			'rgba(255, 99, 132, 0.7)',
 			'rgba(54, 162, 235, 0.7)',
 			'rgba(255, 206, 86, 0.7)'
-			// Add more colors for additional members
+			
 		];
 
 		var ctxUserAssigned = document.getElementById('userAssigned').getContext('2d');
@@ -250,13 +254,40 @@
 				}]
 			},
 			options: {
-				// Add chart options here if needed
+				
 			}
 		});
 
 	</script>
 
 	<script>
+
+		
+		var _chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
+		var _chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+
+		var ticketNames = _chartLabels.map(function (label) {
+			return 'Ticket ' + label;
+		});
+
+		var barColor = ["red", "green", "blue", "orange", "brown"]; 
+
+		var ctxMyChart = document.getElementById('ticketComplete').getContext('2d');
+		var myChart = new Chart(ctxMyChart, {
+			type: "bar",
+			data: {
+				labels: ticketNames,
+				datasets: [{
+					backgroundColor: barColor.slice(0, _chartData.length), 
+					data: _chartData
+				}]
+			}
+		});
+
+	</script>
+
+
+@*	<script>
 
 		// This part is for the myChart based on ViewBag data
 		var _chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
@@ -280,34 +311,7 @@
 			}
 		});
 
-	</script>
-
-
-	<script>
-
-		// This part is for the myChart based on ViewBag data
-		var _chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
-		var _chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
-
-		var ticketNames = _chartLabels.map(function (label) {
-			return 'Ticket ' + label;
-		});
-
-		var barColor = ["red", "green", "blue", "orange", "brown"]; // Define your colors as needed
-
-		var ctxMyChart = document.getElementById('myChart').getContext('2d');
-		var myChart = new Chart(ctxMyChart, {
-			type: "bar",
-			data: {
-				labels: ticketNames,
-				datasets: [{
-					backgroundColor: barColor.slice(0, _chartData.length), // Use colors based on data length
-					data: _chartData
-				}]
-			}
-		});
-
-	</script>
+	</script>*@
 
 
 
@@ -348,50 +352,6 @@
 		}
 
 	</script>
-
-
-}
-
-
-
-
-				
-@*
-	@section Scripts {
-	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-	<script src="~/lib/jquery/dist/jquery.min.js"></script>
-	<script>
-
-														$(function () {
-
-															$(function () {
-																const bubbleData = Array.from({ length: 10 }, () => ({
-																	x: Math.random() * 100,
-																	y: Math.random() * 100,
-																	r: Math.random() * 20 // Radius of the bubble
-																}));
-
-																const bubbleConfig = {
-																	type: 'bubble',
-																	data: {
-																		datasets: [{
-																			label: 'Bubble Dataset',
-																			data: bubbleData,
-																			backgroundColor: 'rgba(255, 99, 132, 0.5)',
-																			borderColor: 'rgba(255, 99, 132, 1)',
-																			borderWidth: 1
-																		}]
-																	},
-																	options: {
-																		// Add chart options here if needed
-																	}
-																};
-
-																const bubbleCtx = document.getElementById('bubble').getContext('2d');
-																new Chart(bubbleCtx, bubbleConfig);
-
-																// Rest of your chart code...
-															});
-
-
-*@
+	}
+	</body>
+	</html>

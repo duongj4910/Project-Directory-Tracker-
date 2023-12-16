@@ -21,7 +21,10 @@ body {
     margin-bottom: 60px;
     padding: 40px 40px 60px;
 }
-
+.chart-canvas {
+    max-width: 390px;
+    max-height: 430px;
+}
 .chart-container {
     display: flex;
     flex-wrap: wrap;
@@ -76,12 +79,11 @@ body {
         padding: 12px;
         text-align: left;
         border-bottom: 1px solid #ddd; 
+        text-transform: none;
     }
 
     .table th {
         background-color: #f2f2f2; 
-        border-top-left-radius: 10px; 
-        border-top-right-radius: 10px;
     }
 
     /* Alternate row background color for better readability */

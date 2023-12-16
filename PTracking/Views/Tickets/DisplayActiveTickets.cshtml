@@ -1,0 +1,120 @@
+﻿@model IEnumerable<PTracking.Models.Tickets>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProjectName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Company)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UserAssigned)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AssignedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Priority)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DueBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StartDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quarter)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxTicketsPerSprint)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SprintStoryPointLimit)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PointPerTicket)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var ticket in Model)
+        {
+            @if (ticket.Status == "Incomplete" || ticket.Status == "In progress")
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.ProjectName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Company)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.UserAssigned)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.AssignedBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Status)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Priority)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Category)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.DueBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.UpdatedDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.Quarter)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.MaxTicketsPerSprint)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.SprintStoryPointLimit)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => ticket.PointPerTicket)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@ticket.ID">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@ticket.ID">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@ticket.ID">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

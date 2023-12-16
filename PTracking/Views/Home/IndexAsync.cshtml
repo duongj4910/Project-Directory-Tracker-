@@ -1,0 +1,219 @@
+﻿<div class="chart-container">
+
+	<canvas id="myChart" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="pieChart" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="userAssigned" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="priorityChart" style="max-width:400px; max-height:430px;"></canvas>
+	<canvas id="ticketNamesChart" style="max-width:400px; max-height:430px;"></canvas>
+
+</div>
+
+
+<!-- Your HTML content -->
+<div id="employeeData">
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Email</th>
+				<th> Status </th>
+				<!-- Add other column headers here -->
+			</tr>
+		</thead>
+		<tbody>
+			@if (ViewBag.Employees != null)
+			{
+				foreach (var employee in ViewBag.Employees)
+				{
+					<tr>
+						<td>@employee.Name</td>
+						<td>@employee.Email</td>
+						<td>
+							@if (employee.Availability == "Available")
+							{
+								<button type="button" class="btn btn-success custom-btn">Available</button>
+							}
+							else
+							{
+								<button type="button" class="btn btn-danger custom-btn">Unavailable</button>
+							}
+						</td>
+						@*	<td>
+				<a asp-action="Edit" asp-route-id="@employee.ID">Edit</a> |
+				<a asp-action="Details" asp-route-id="@employee.ID">Details</a> |
+				<a asp-action="Delete" asp-route-id="@employee.ID">Delete</a>
+				</td>*@
+						<!-- Add other columns using employee properties -->
+					</tr>
+				}
+			}
+			else
+			{
+				<tr>
+					<td colspan="2">No employee data available</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
+
+
+
+@section Scripts {
+	<!-- Include necessary libraries -->
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+	<script>
+		// Get data from ViewBag
+		var chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
+		var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+
+		var statusColors = [
+			'rgba(75, 192, 192, 0.7)', // Color for completed
+			'rgba(255, 99, 132, 0.7)', // Color for incomplete
+			'rgba(255, 206, 86, 0.7)' // Color for in progress
+			// Add more colors for additional statuses if needed
+		];
+
+		var pieChart = new Chart(document.getElementById('pieChart'), {
+			type: 'pie',
+			data: {
+				labels: chartLabels,
+				datasets: [{
+					data: chartData,
+					backgroundColor: statusColors
+				}]
+			},
+			options: {
+				// Add chart options here if needed
+			}
+		});
+	</script>
+
+	<script>
+		// This part is for the userAssigned chart
+		var uniqueMembers = @Html.Raw(Json.Serialize(ViewBag.UniqueMembers));
+		var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
+
+		var memberColors = [
+			'rgba(255, 99, 132, 0.7)',
+			'rgba(54, 162, 235, 0.7)',
+			'rgba(255, 206, 86, 0.7)'
+			// Add more colors for additional members
+		];
+
+		var ctxUserAssigned = document.getElementById('userAssigned').getContext('2d');
+		var memberChart = new Chart(ctxUserAssigned, {
+			type: 'bar',
+			data: {
+				labels: uniqueMembers,
+				datasets: [{
+					label: 'Number of Tickets Assigned',
+					data: memberOccurrences,
+					backgroundColor: memberColors.slice(0, uniqueMembers.length),
+					borderColor: 'rgba(54, 162, 235, 1)',
+					borderWidth: 1
+				}]
+			},
+			options: {
+				// Add chart options here if needed
+			}
+		});
+
+	</script>
+
+	<script>
+
+		// This part is for the myChart based on ViewBag data
+		var _chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
+		var _chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+
+		var ticketNames = _chartLabels.map(function (label) {
+			return 'Ticket ' + label;
+		});
+
+		var barColor = ["red", "green", "blue", "orange", "brown"]; // Define your colors as needed
+
+		var ctxMyChart = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctxMyChart, {
+			type: "bar",
+			data: {
+				labels: ticketNames,
+				datasets: [{
+					backgroundColor: barColor.slice(0, _chartData.length), // Use colors based on data length
+					data: _chartData
+				}]
+			}
+		});
+
+	</script>
+
+
+	<script>
+
+		// This part is for the myChart based on ViewBag data
+		var _chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
+		var _chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+
+		var ticketNames = _chartLabels.map(function (label) {
+			return 'Ticket ' + label;
+		});
+
+		var barColor = ["red", "green", "blue", "orange", "brown"]; // Define your colors as needed
+
+		var ctxMyChart = document.getElementById('myChart').getContext('2d');
+		var myChart = new Chart(ctxMyChart, {
+			type: "bar",
+			data: {
+				labels: ticketNames,
+				datasets: [{
+					backgroundColor: barColor.slice(0, _chartData.length), // Use colors based on data length
+					data: _chartData
+				}]
+			}
+		});
+
+	</script>
+
+
+
+	<script>
+		// This part is for the myChart based on AJAX calling the C# function
+		fetchDataAndRenderChart();
+
+		function fetchDataAndRenderChart() {
+			$.ajax({
+				type: "POST",
+				url: "/Tickets/GetUserAssigned", // Replace YourController with your actual controller name
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				success: function (data) {
+					// Process the returned data here and render your chart
+					var _chartLabels = data.chartLabels;
+					var _chartData = data.chartData;
+
+					var barColor = ["red", "green", "blue", "orange", "brown"]; // Define your colors as needed
+
+					var ctxMyChart = document.getElementById('ticketNamesChart').getContext('2d');
+					var myChart = new Chart(ctxMyChart, {
+						type: "bar",
+						data: {
+							labels: _chartLabels, // Use ticket names retrieved from the server as labels
+							datasets: [{
+								backgroundColor: barColor.slice(0, _chartData.length), // Use colors based on data length
+								data: _chartData
+							}]
+						}
+					});
+				},
+				error: function (err) {
+					// Handle errors here
+					console.error(err);
+				}
+			});
+		}
+
+	</script>
+
+
+}

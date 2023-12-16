@@ -8,47 +8,53 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PTracking.Data;
 using PTracking.Models;
+using PTracking.Services;
+using PTracking.ViewModel;
 
 namespace PTracking.Controllers
 {
     public class ProjectsController : Controller
     {
         private readonly ApplicationDbContext _context;
+		private readonly ITicketService _ticketService;
+		private readonly IEmployeeService _employeeService;
+		private readonly IProjectService _projectService;
 
-        public ProjectsController(ApplicationDbContext context)
+
+		public ProjectsController(ApplicationDbContext context, IEmployeeService employeeService, ITicketService ticketService, IProjectService projectService)
         {
             _context = context;
-        }
+			_ticketService = ticketService;
+			_employeeService = employeeService;
+			_projectService = projectService;
+		}
 
         // GET: Projects
         public async Task<IActionResult> Index()
         {
             var projects = await _context.Project.ToListAsync();
 
-            // Retrieve other necessary data
-            //int activeProjectCount = _context.Tickets.Count(project => project.Status == "In Progress");
+            var projectsByName = await _context.Project
+                .GroupBy(p => p.Name)
+                .Select(g => new { ProjectName = g.Key, Count = g.Count() })
+                .ToListAsync();
 
-            //int inActiveProjectCount = _context.Tickets.Count(project => project.Status == "Incomplete");
+            int completeCount = await _context.Project.CountAsync(p => p.Status == "Completed");
+            int incompleteCount = await _context.Project.CountAsync(p => p.Status == "Incomplete");
+            int inProgressCount = await _context.Project.CountAsync(p => p.Status == "In Progress");
+            int uniqueProjectNamesCount = projectsByName.Count;
+            int highPriorityProjects = await _context.Project.CountAsync(p => p.Priority == "High");
 
-            // Other data retrieval logic...
-
-            // Store data in ViewBag
-                //ViewBag.Project = projects;
-                //ViewBag.ActiveProjectCount = activeProjectCount;
-                //ViewBag.InactiveProjectCount = inActiveProjectCount;
-
-            // Get completion data
-            int completeCount = _context.Project.Count(p => p.Status == "Completed");
-            int incompleteCount = _context.Project.Count(p => p.Status == "Incomplete");
-            int inProgressCount = _context.Project.Count(p => p.Status == "In Progress");
+           
+            
 
             ViewBag.Project = projects;
             ViewBag.CompleteCount = completeCount;
             ViewBag.IncompleteCount = incompleteCount;
             ViewBag.InProgressCount = inProgressCount;
+            ViewBag.UniqueProjectNamesCount = uniqueProjectNamesCount;
+            ViewBag.HighPriorityProjects = highPriorityProjects;
 
-
-            // Store completion data in a structured object
             var completionData = new
             {
                 Labels = new List<string> { "Complete", "Incomplete", "In Progress" },
@@ -58,16 +64,16 @@ namespace PTracking.Controllers
             ViewBag.ChartLabels = completionData.Labels;
             ViewBag.ChartData = completionData.ProjectCounts;
 
-            var projectsWithNonNullUsers = _context.Project
-            .Where(p => p.UsersAssigned != null) // Filter out null UsersAssigned
-            .ToList(); // Retrieve projects first 
+            var projectsWithNonNullUsers = await _context.Project
+                .Where(p => p.UsersAssigned != null)
+                .ToListAsync();
 
             var projectsByUser = projectsWithNonNullUsers
-        .SelectMany(p => p.UsersAssigned.Split(',')) // Split users by ',' to count each user separately
-        .Select(user => user.Trim()) // Trim to remove whitespace
-        .GroupBy(user => user) // Group by individual user
-        .Select(g => new { User = g.Key, Count = g.Count() })
-        .ToList();
+                .SelectMany(p => p.UsersAssigned.Split(','))
+                .Select(user => user.Trim())
+                .GroupBy(user => user)
+                .Select(g => new { User = g.Key, Count = g.Count() })
+                .ToList();
 
             var uniqueMembers = projectsByUser.Select(entry => entry.User).ToList();
             var memberOccurrences = projectsByUser.Select(entry => entry.Count).ToList();
@@ -75,60 +81,108 @@ namespace PTracking.Controllers
             ViewBag.UniqueMembers = uniqueMembers;
             ViewBag.MemberOccurrences = memberOccurrences;
 
+            var projectsByMonth = await _context.Project
+                .GroupBy(p => p.StartDate)
+                .Select(g => new { StartDate = g.Key, ProjectCount = g.Count() })
+                .OrderBy(entry => entry.StartDate)
+                .ToListAsync();
 
-            var projectsByMonth = _context.Project
-    .GroupBy(p => p.StartDate) // Group by StartDate
-    .Select(g => new { StartDate = g.Key, ProjectCount = g.Count() })
-    .OrderBy(entry => entry.StartDate) // Optional: Order by StartDate
-    .ToList();
+            var uniqueMonths = await _context.Project
+                .Select(p => p.StartDate)
+                .Distinct()
+                .ToListAsync();
 
-            var uniqueMonths = _context.Project
-     .Select(p => p.StartDate)
-     .Distinct()
-     .ToList();
-
-            var numOfProjects = projectsByMonth.Select(entry=>entry.ProjectCount).ToList();
+            var numOfProjects = projectsByMonth.Select(entry => entry.ProjectCount).ToList();
 
             ViewBag.UniqueMonths = uniqueMonths;
             ViewBag.NumOfProjects = numOfProjects;
 
-           
-            int energryCount = _context.Project.Count(p => p.Category == "Energy Technology");
-            int itCount = _context.Project.Count(p => p.Category == "Information and Technology");
-            int cloudCount = _context.Project.Count(p => p.Category == "Cloud Services");
-
+            int energyCount = await _context.Project.CountAsync(p => p.Category == "Energy Technology");
+            int itCount = await _context.Project.CountAsync(p => p.Category == "Information and Technology");
+            int cloudCount = await _context.Project.CountAsync(p => p.Category == "Cloud Services");
 
             var categoryData = new
             {
                 CategoryLabels = new List<string> { "Energy Technology", "Information and Technology", "Cloud Services" },
-                CategoryCounts = new List<int> { energryCount, itCount, cloudCount }
+                CategoryCounts = new List<int> { energyCount, itCount, cloudCount }
             };
 
             ViewBag.CategoryList = categoryData.CategoryLabels;
             ViewBag.CategoryCt = categoryData.CategoryCounts;
 
+           
 
-
-            //get employee 
-            var employees = _context.Employee.ToList(); // Retrieve employees from your database
-
-            // Assign employees to ViewBag in the desired format
-            ViewBag.Employees = employees.Select(emp => new
-            {
-                Name = emp.Name,
-                Email = emp.Email,
-                Availability = emp.Availability
-            });
-
-
-
-
+            var employees = await GetEmployeeViewModelsAsync();
+            ViewBag.Employees = employees;
 
             return View();
         }
 
-        // GET: Projects/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+        public async Task<IActionResult> DisplayAllProjects()
+        {
+            var projects = await _projectService.GetProjectsTotalAsync();
+
+            return View(projects);
+
+        }
+
+        public async Task<IActionResult> DisplayActiveProjects()
+		{
+            var incompleteOrInProgressTickets = await _projectService.GetProjectsByStatusAsync();
+
+			return View(incompleteOrInProgressTickets);
+
+
+		}
+
+        public async Task<IActionResult> DisplayCompletedProjects()
+        {
+            var complete = await _projectService.GetProjectsByCompletedStatusAsync();
+
+            return View(complete);
+
+
+        }
+
+
+        public async Task<IActionResult> DisplayPriority()
+        {
+            var highPriorityProjects = await _projectService.GetProjectsByPriorityAsync();
+
+            return View(highPriorityProjects);
+
+
+        }
+
+
+        public async Task<IActionResult> PopulateEmployeeData()
+		{
+			var employees = await GetEmployeeViewModelsAsync();
+			return View(employees);
+		}
+
+
+		public async Task<List<EmployeeViewModel>> GetEmployeeViewModelsAsync()
+		{
+			var employees = await _employeeService.GetAllEmployeesAsync();
+
+			var employeeViewModels = employees.Select(employee => new EmployeeViewModel
+			{
+                icon = employee.icon,
+                Name = employee.Name,
+				Email = employee.Email,
+				Availability = employee.Availability
+				
+				// Map other properties as needed
+			}).ToList();
+
+			return employeeViewModels;
+		}
+
+
+		// GET: Projects/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Project == null)
             {

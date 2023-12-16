@@ -5,27 +5,44 @@
 }
 <div class="Dashboard row">
     <div class="col-sm-4 mb-3">
-        <div class="card bg-danger text-white rounded">
+        <div class="card rounded" style="background-color: #c3d5ae; color: black;">
             <div class="card-body">
-                <h6 class="card-title">Incomplete Projects</h6>
+                <h6 class="card-title">
+                    <a href="@Url.Action("DisplayActiveProjects", "Projects")" class="text-white"> Incomplete Projects </a>
+                </h6>
                 <p class="card-text">@ViewBag.IncompleteCount</p>
             </div>
         </div>
     </div>
 
     <div class="col-sm-4 mb-3">
-        <div class="card bg-warning text-dark rounded">
+        <div class="card rounded" style="background-color: #e8e6e6; color: black ;">
             <div class="card-body">
-                <h6 class="card-title">In Progress Projects</h6>
-                <p class="card-text">@ViewBag.InProgressCount</p>
+                <h6 class="card-title">
+                    <a href="@Url.Action("DisplayAllProjects", "Projects")" , class="text-white"> Total Projects Year to Date </a>
+                </h6>
+                <p class="card-text">@ViewBag.UniqueProjectNamesCount</p>
             </div>
         </div>
     </div>
 
     <div class="col-sm-4 mb-3">
-        <div class="card bg-success text-white rounded">
+        <div class="card rounded" style="background-color: #e8e6e6; color: black ;">
             <div class="card-body">
-                <h6 class="card-title">Complete Projects</h6>
+                <h6 class="card-title">
+                    <a href="@Url.Action("DisplayPriority", "Projects")" , class="text-white"> High Priority Projects </a>
+                </h6>
+                <p class="card-text">@ViewBag.HighPriorityProjects</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-4 mb-3">
+        <div class="card rounded" style="background-color: #ecd4d3; color: black;">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <a href="@Url.Action("DisplayCompletedProjects", "Projects")" class="text-white"> Complete Projects </a>
+                </h6>
                 <p class="card-text">@ViewBag.CompleteCount</p>
             </div>
         </div>
@@ -144,11 +161,10 @@
 
 <div class="chart-container">
 
-    <canvas id="activeProjects" style="max-width:400px; max-height:430px;"></canvas>
-    <canvas id="userAssigned" style="max-width:400px; max-height:430px;"></canvas>
-    <canvas id="lineChart" style="max-width:400px; max-height:430px;"></canvas>
-    <canvas id="ticketNamesChart" style="max-width:400px; max-height:430px;"></canvas>
-    <canvas id="categoryProjects" style="max-width:400px; max-height:430px;"></canvas>
+    <canvas id="activeProjects" style="max-width:390px; max-height:430px;"></canvas>
+    <canvas id="userAssigned" style="max-width:390px; max-height:430px;"></canvas>
+    <canvas id="lineChart" style="max-width:390px; max-height:430px;"></canvas>
+    <canvas id="categoryProjects" style="max-width:390px; max-height:430px;"></canvas>
 
 </div>
 @{
@@ -166,9 +182,9 @@
 		var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
 
 		var statusColors = [
-			'rgba(75, 192, 192, 0.7)', // Color for completed
-			'rgba(255, 99, 132, 0.7)', // Color for incomplete
-			'rgba(255, 206, 86, 0.7)' // Color for in progress
+            '#c3d5ae',
+            '#e8e6e6',
+            '#ecd4d3'
 			// Add more colors for additional statuses if needed
 		];
 
@@ -193,10 +209,9 @@
         var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
 
         var memberColors = [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 206, 86, 0.7)'
-            // Add more colors for additional members
+            '#e8e6e6',
+            '#34afbb',
+            '#ecd4d3'
         ];
 
         var ctxUserAssigned = document.getElementById('userAssigned').getContext('2d');
@@ -255,14 +270,14 @@
         var categoryData = @Html.Raw(Json.Serialize(ViewBag.CategoryCt));
 
         var statusColors = [
-            'rgba(75, 192, 192, 0.7)', // Color for completed
-            'rgba(255, 99, 132, 0.7)', // Color for incomplete
-            'rgba(255, 206, 86, 0.7)' // Color for in progress
+            '#f66c50', // Color for completed
+            '#ebc354',
+                    '#e8e6e6' // Color for in progress
             // Add more colors for additional statuses if needed
         ];
 
         var activeCategoryChart = new Chart(document.getElementById('categoryProjects'), {
-            type: 'pie',
+            type: 'doughnut',
             data: {
                 labels: categoryLabels,
                 datasets: [{
@@ -288,6 +303,7 @@
     <table class="table">
         <thead>
             <tr>
+                <th>  </th>
                 <th>Name</th>
                 <th>Email</th>
                 <th> Status </th>
@@ -300,7 +316,8 @@
                 foreach (var employee in ViewBag.Employees)
                 {
                     <tr>
-                        <td>@employee.Name</td>
+                        <td> <img src="@employee.icon" alt="User Image" /></td>
+                        <td>@employee.Name</td>        
                         <td>@employee.Email</td>
                         <td>
                             @if (employee.Availability == "Available")
@@ -312,6 +329,9 @@
                                 <button type="button" class="btn btn-danger custom-btn">Unavailable</button>
                             }
                         </td>
+                        
+                        
+                   
                         @*	<td>
                 <a asp-action="Edit" asp-route-id="@employee.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@employee.ID">Details</a> |

@@ -7,20 +7,30 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PTracking.Data;
 using PTracking.Models;
+using PTracking.Services;
 using PTracking.ViewModel;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using static NuGet.Packaging.PackagingConstants;
+using PagedList.Mvc;
+using PagedList;
 
 namespace PTracking.Controllers
 {
     public class TicketsController : Controller
     {
         private readonly ApplicationDbContext _context;
+		private readonly ITicketService _ticketService;
+		private readonly IEmployeeService _employeeService;
+		private readonly IProjectService _projectService;
 
-        public TicketsController(ApplicationDbContext context)
+
+		public TicketsController(ApplicationDbContext context, IEmployeeService employeeService, ITicketService ticketService, IProjectService projectService)
         {
             _context = context;
-        }
+			_ticketService = ticketService;
+			_employeeService = employeeService;
+			_projectService = projectService;
+		}
 
 		public async Task<IActionResult> Index()
 		{
@@ -52,22 +62,7 @@ namespace PTracking.Controllers
 
 			// Assign the structured data to ViewBag
 			ViewBag.ChartLabels = completionData.Labels; // Use ViewBag.ChartLabels instead of ViewBag.CompletionData
-			ViewBag.ChartData = completionData.TicketCounts; // Use ViewBag.ChartData instead of ViewBag.CompletionData
-
-
-
-
-
-			//get employee 
-			var employees = _context.Employee.ToList(); // Retrieve employees from your database
-
-			// Assign employees to ViewBag in the desired format
-			ViewBag.Employees = employees.Select(emp => new
-			{
-				Name = emp.Name,
-				Email = emp.Email,
-				Availability = emp.Availability
-			});
+			ViewBag.ChartData = completionData.TicketCounts; // Use ViewBag.ChartData instead of ViewBag.CompletionDa
 
 
 			var ticketsByUser = _context.Tickets
@@ -81,122 +76,69 @@ namespace PTracking.Controllers
 			ViewBag.UniqueMembers = uniqueMembers; // Use ViewBag to store unique members
 			ViewBag.MemberOccurrences = memberOccurrences; // Use ViewBag to store member occurrences
 
-
+			var employees = await GetEmployeeViewModelsAsync();
+			ViewBag.Employees = employees;
 
 
 			return View();
 
 		}
 
+        public async Task<IActionResult> DisplayPriority()
+        {
+            var displayPriorityTickets = await _ticketService.GetTicketsByPriorityAsync();
 
+            return View(displayPriorityTickets);
+        }
 
+		public async Task<IActionResult> DisplayActiveTickets()
+		{
+			var incompleteOrInProgressTickets = await _ticketService.GetTicketsByStatusAsync();
 
-		////GET: Tickets
-		//public async Task<IActionResult> Index()
-		//{
-		//    return View(await _context.Tickets.ToListAsync());
-
-		//}
-
-		//[HttpGet]
-		//public IActionResult GetEmployees()
-		//{
-		//	var employees = _context.Employee.ToList(); // Retrieve employees from your database
-		//	return Json(employees); // Return employees as JSON
-		//}
-
+				return View(incompleteOrInProgressTickets); 
+			
+			
+		}
+        public async Task<IActionResult> DisplayTicketsBySprint()
+        {
+            var quarter = await _ticketService.GetSprintQuarterAsync();
+            return View(quarter);
+        }
 
 		[HttpPost]
-        public List<object> GetPointsData()
+        public IActionResult GetUserAssigned()
         {
-            List<object> data = new List<object>();
-
-            List<int> xLabels = Enumerable.Range(1, 4).ToList(); // Limit to 4 tickets
-
-            // Retrieve corresponding data for these tickets
-            List<int> Point = _context.Tickets
-                                .OrderByDescending(p => p.PointPerTicket)
-                                .Take(4) // Limiting to 4 tickets
-                                .Select(p => p.PointPerTicket).ToList();
-
-            data.Add(xLabels);
-            data.Add(Point);
-
-            return data;
-        }
-
-
-		//[HttpPost]
-		//public List<object> GetCompletionData()
-		//{
-
-		//        List<object> data = new List<object>();
-
-		//        // Get counts of Complete and Incomplete tickets
-		//        int completeCount = _context.Tickets.Count(p => p.Status == "Completed");
-		//        int incompleteCount = _context.Tickets.Count(p => p.Status == "Incomplete");
-		//    int inProgressCount = _context.Tickets.Count(p => p.Status == "In Progress");
-		//    // Create labels and corresponding data
-		//    List<string> labels = new List<string> { "Complete", "Incomplete", "In Progress" };
-		//        List<int> ticketCounts = new List<int> { completeCount, incompleteCount, inProgressCount };
-
-		//        // Add labels and counts to data list
-		//        data.Add(labels);
-		//        data.Add(ticketCounts);
-
-		//        return data;
-
-		//}
-
-		// This method will be a part of your Controller
-		
-			[HttpPost]
-			public IActionResult GetUserAssigned()
-			{
-				var ticketsByUser = _context.Tickets
-					.GroupBy(t => t.UserAssigned)
-					.Select(g => new { User = g.Key, Count = g.Count() })
-					.ToList();
-
-				var ticketNames = _context.Tickets
-					.Select(t => t.Name)
-					.Distinct()
-					.ToList();
-
-				List<object> data = new List<object>();
-
-				List<string> users = ticketsByUser.Select(entry => entry.User).ToList();
-				List<int> counts = ticketsByUser.Select(entry => entry.Count).ToList();
-
-				data.Add(ticketNames);
-				data.Add(counts);
-
-				return Json(new { chartLabels = ticketNames, chartData = counts });
-			}
-
-		
-
-
-		public ActionResult PriorityChartData()
-        {
-            var priorityData = _context.Tickets
-                .GroupBy(t => t.Priority)
-                .Select(g => new
-                {
-                    Priority = g.Key,
-                    SprintStoryPointTotal = g.Sum(t => t.SprintStoryPointLimit),
-                    PointPerTicketTotal = g.Sum(t => t.PointPerTicket)
-                })
+            var ticketsByUser = _context.Tickets
+                .GroupBy(t => t.UserAssigned)
+                .Select(g => new { User = g.Key, Count = g.Count() })
                 .ToList();
 
-            return Json(priorityData);
+            var ticketNames = _context.Tickets
+                .Select(t => t.Name)
+                .Distinct()
+                .ToList();
+
+            List<object> data = new List<object>();
+
+            List<string> users = ticketsByUser.Select(entry => entry.User).ToList();
+            List<int> counts = ticketsByUser.Select(entry => entry.Count).ToList();
+
+            data.Add(ticketNames);
+            data.Add(counts);
+
+            return Json(new { chartLabels = ticketNames, chartData = counts });
         }
 
-
-        public async Task<IActionResult> ShowTicketSearch()
+        public IActionResult ShowTicketSearch()
         {
             return View();
         }
+
+
+        //public async Task<IActionResult> ShowTicketSearch()
+        //{
+        //    return View();
+        //}
 
         // POST: ProjectDatas  changeed String to string
         public async Task<IActionResult> ShowTicketSearchResults(string SearchPhrase)
@@ -206,9 +148,32 @@ namespace PTracking.Controllers
         }
 
 
+		public async Task<IActionResult> PopulateEmployeeData()
+		{
+			var employees = await GetEmployeeViewModelsAsync();
+			return View(employees);
+		}
 
-        // GET: Tickets/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+		public async Task<List<EmployeeViewModel>> GetEmployeeViewModelsAsync()
+		{
+			var employees = await _employeeService.GetAllEmployeesAsync();
+
+			var employeeViewModels = employees.Select(employee => new EmployeeViewModel
+			{
+				icon = employee.icon,
+				Name = employee.Name,
+				Email = employee.Email,
+				Availability = employee.Availability
+
+				// Map other properties as needed
+			}).ToList();
+
+			return employeeViewModels;
+		}
+
+		// GET: Tickets/Details/5
+		public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Tickets == null)
             {

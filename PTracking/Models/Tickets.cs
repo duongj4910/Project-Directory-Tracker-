@@ -18,7 +18,7 @@ namespace PTracking.Models
         public string DueBy { get; set; }
         public string? UpdatedDate { get; set; }
         public string? StartDate { get; set; }
-        public string icon { get; set; }
+        public string Quarter { get; set; }
         public int MaxTicketsPerSprint { get; set; }
         public int SprintStoryPointLimit { get; set; }
         public int PointPerTicket { get; set; }
