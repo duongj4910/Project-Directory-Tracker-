@@ -2,57 +2,92 @@
 
 @{
     ViewData["Title"] = "Index";
+    var uniqueMonths = ViewBag.UniqueMonths as List<string>;
+    var numOfProjects = ViewBag.NumOfProjects as List<int>;
 }
-<div class="Dashboard row">
-    <div class="col-sm-4 mb-3">
-        <div class="card rounded" style="background-color: #c3d5ae; color: black;">
-            <div class="card-body">
-                <h6 class="card-title">
-                    <a href="@Url.Action("DisplayActiveProjects", "Projects")" class="text-white"> Incomplete Projects </a>
-                </h6>
-                <p class="card-text">@ViewBag.IncompleteCount</p>
+
+
+<head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+
+</head>
+<body>
+
+<div class="row">
+    <div class="col-sm-3 mb-3">
+            <a href="@Url.Action("DisplayActiveProjects", "Projects")" style="background-color: #25321c; text-decoration: none;">
+            <div id="active-Projects" class="card rounded">
+                    <div class="card-header  text-white text-center" style="background-color:#25321c">
+                    Incomplete Projects
+                </div>
+                <div class="card-body text-center">
+                    <span style="font-size: 30px;">
+                        <i class="fas fa-diagram-project" style="font-size: 30px; margin-bottom: 10px;"></i><br>
+                    </span>
+                    <span style="font-size: 18px;">@ViewBag.IncompleteCount <br> Incomplete Projects </span>
+                </div>
             </div>
-        </div>
+        </a>
     </div>
 
-    <div class="col-sm-4 mb-3">
-        <div class="card rounded" style="background-color: #e8e6e6; color: black ;">
-            <div class="card-body">
-                <h6 class="card-title">
-                    <a href="@Url.Action("DisplayAllProjects", "Projects")" , class="text-white"> Total Projects Year to Date </a>
-                </h6>
-                <p class="card-text">@ViewBag.UniqueProjectNamesCount</p>
+    <div class="col-sm-3 mb-3">
+        <a href="@Url.Action("DisplayAllProjects", "Projects")" style="background-color: #c3d5ae; text-decoration: none;">
+            <div id="allProjects" class="card rounded">
+                <div class="card-header  text-white text-center" style="background-color:  #c3d5ae;">
+                    Complete Projects
+                </div>
+                <div class="card-body text-center">
+                    <span style="font-size: 30px;">
+                        <i class="fa-solid fa-check" style="font-size: 30px;"></i><br>
+                    </span>
+                    <span style="font-size: 18px;">@ViewBag.UniqueProjectNamesCount <br> Complete Projects </span>
+                </div>
             </div>
-        </div>
+        </a>
+    </div>
+ 
+    <div class="col-sm-3 mb-3">
+        <a href="@Url.Action("DisplayPriority", "Projects")" style="background-color:#ecd4d3; text-decoration: none;">
+            <div id="priority-projects" class="card rounded">
+                <div class="card-header  text-white text-center" style="background-color:#ecd4d3;">
+                    Active Tickets
+                </div>
+                <div class="card-body text-center">
+                    <span style="font-size: 30px;">
+                        <i class="fa-solid fa-list" style="font-size: 30px;"></i><br>
+                    </span>
+                    <span style="font-size: 18px;">@ViewBag.HighPriorityProjects <br> Active Projects </span>
+                </div>
+            </div>
+        </a>
     </div>
 
-    <div class="col-sm-4 mb-3">
-        <div class="card rounded" style="background-color: #e8e6e6; color: black ;">
-            <div class="card-body">
-                <h6 class="card-title">
-                    <a href="@Url.Action("DisplayPriority", "Projects")" , class="text-white"> High Priority Projects </a>
-                </h6>
-                <p class="card-text">@ViewBag.HighPriorityProjects</p>
+    <div class="col-sm-3 mb-3">
+        <a href="@Url.Action("DisplayCompletedProjects", "Projects")" style="background-color:    #34afbb; text-decoration: none;">
+            <div id="completed-Projects" class="card rounded">
+                <div class="card-header  text-white text-center" style="background-color:    #34afbb;">
+                    High Priority Projects
+                </div>
+                <div class="card-body text-center">
+                    <span style="font-size: 30px;">
+                        <i class="fa-solid fa-star" style="font-size: 30px;"></i><br>
+                    </span>
+                    <span style="font-size: 18px;">@ViewBag.CompleteCount <br> High Priority Projects </span>
+                </div>
             </div>
-        </div>
-    </div>
-
-    <div class="col-sm-4 mb-3">
-        <div class="card rounded" style="background-color: #ecd4d3; color: black;">
-            <div class="card-body">
-                <h6 class="card-title">
-                    <a href="@Url.Action("DisplayCompletedProjects", "Projects")" class="text-white"> Complete Projects </a>
-                </h6>
-                <p class="card-text">@ViewBag.CompleteCount</p>
-            </div>
-        </div>
+        </a>
     </div>
 </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+
+
+    <p>
+        <a href="@Url.Action("Create")" class="btn btn-primary">Create New</a>
+    </p>
+
+<div class="table-responsive" style="overflow-x: auto;">
+<table id="projectsTable" class="table table-responsive table-bordered">
     <thead>
         <tr>
             <th>
@@ -74,9 +109,6 @@
                Assigned By
             </th>
             <th>
-               Status
-            </th>
-            <th>
                Status Message
             </th>
            
@@ -84,16 +116,8 @@
               Priority
             </th>
             <th>
-              Category
-            </th>
-            <th>
                DueBy
             </th>
-
-            <th>
-               icon
-            </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -104,9 +128,9 @@
 		{
 			<tr>
        
-            <td>
-                @item.Name
-            </td>
+            
+             <td><a href="/Projects/Details/@item.ID">@item.Name</a></td>
+           
             <td>
                 @item.Description
             </td>
@@ -123,9 +147,6 @@
                 @item.AssignedBy
             </td>
             <td>
-                @item.Status
-            </td>
-            <td>
                 @item.StatusMessage
             </td>
          
@@ -133,19 +154,9 @@
                 @item.Priority
             </td>
             <td>
-                @item.Category
-            </td>
-            <td>
                 @item.DueBy
             </td>
-            <td>
-                @item.icon
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
+          
         </tr>
             }
         }
@@ -157,27 +168,35 @@
 		}
     </tbody>
 </table>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
 
-
-<div class="chart-container">
-
-    <canvas id="activeProjects" style="max-width:390px; max-height:430px;"></canvas>
-    <canvas id="userAssigned" style="max-width:390px; max-height:430px;"></canvas>
+<div class="container">
+    <div class="chart-container-project1">
+        <canvas id="activeProjects" style="max-width:390px; max-height:430px;"></canvas>
+        <canvas id="userAssigned" style="max-width:390px; max-height:430px;"></canvas>
+    </div>
+    <div class="chart-container-project2">
     <canvas id="lineChart" style="max-width:390px; max-height:430px;"></canvas>
     <canvas id="categoryProjects" style="max-width:390px; max-height:430px;"></canvas>
-
+    </div>
 </div>
-@{
-    var uniqueMonths = ViewBag.UniqueMonths as List<string>;
-    var numOfProjects = ViewBag.NumOfProjects as List<int>;
-}
+
+
 
 @section Scripts {
-	<!-- Include necessary libraries -->
+    <script>
+        $(document).ready(function () {
+            $.noConflict();
+            $('#projectsTable').DataTable();
+        });
+    </script>
+	
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 	<script>
-		// Get data from ViewBag
+		
 		var chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
 		var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
 
@@ -185,7 +204,7 @@
             '#c3d5ae',
             '#e8e6e6',
             '#ecd4d3'
-			// Add more colors for additional statuses if needed
+		
 		];
 
         var activeProjectsChart = new Chart(document.getElementById('activeProjects'), {
@@ -198,14 +217,14 @@
 				}]
 			},
 			options: {
-				// Add chart options here if needed
+		
 			}
 		});
 	</script>
 
     <script>
                
-                var uniqueMembers = @Html.Raw(Json.Serialize(ViewBag.UniqueMembers));
+    var uniqueMembers = @Html.Raw(Json.Serialize(ViewBag.UniqueMembers));
         var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
 
         var memberColors = [
@@ -228,7 +247,7 @@
                 }]
             },
             options: {
-                // Add chart options here if needed
+                
             }
         });
 
@@ -236,8 +255,7 @@
     
     <script>
    
-            var ctxLineChart = document.getElementById('lineChart').getContext('2d');
-
+        var ctxLineChart = document.getElementById('lineChart').getContext('2d');
         var lineChart = new Chart(ctxLineChart, {
             type: 'line',
             data: {
@@ -265,7 +283,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
-        // Get data from ViewBag
+     
         var categoryLabels = @Html.Raw(Json.Serialize(ViewBag.CategoryList));
         var categoryData = @Html.Raw(Json.Serialize(ViewBag.CategoryCt));
 
@@ -350,3 +368,42 @@
         </tbody>
     </table>
 </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+    $('.custom-btn').on('click', function () {
+    var btn = $(this);
+    btn.prop('disabled', true); // Disable the clicked button
+    btn.text('Processing...'); // Change button text to indicate processing
+
+    var employeeId = btn.data('employee-id'); // Get employee ID from data attribute or any other method
+
+    // Simulated delay for demonstration purposes (replace this with your actual logic)
+    setTimeout(function () {
+    var newStatus = 'Unavailable'; // Replace with the actual updated status
+
+    // Perform AJAX call to update the server with the new status
+    $.ajax({
+    url: "/Employees/ChangeUserStatus", // Replace with your server endpoint
+    method: 'POST', // Use appropriate HTTP method (POST, PUT, etc.)
+    data: { employeeId: employeeId, newStatus: newStatus }, // Send employee ID and new status
+    success: function (response) {
+ 
+    },
+    error: function (error) {
+    
+    },
+    complete: function () {
+                            btn.text(newStatus);
+                            btn.prop('disabled', false);
+                            btn.css('background-color', 'red');
+    }
+    });
+
+    }, 2000); 
+    });
+        });
+    </script>
+</body>
+</html>

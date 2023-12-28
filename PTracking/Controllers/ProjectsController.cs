@@ -129,14 +129,23 @@ namespace PTracking.Controllers
 
         public async Task<IActionResult> DisplayActiveProjects()
 		{
-            var incompleteOrInProgressTickets = await _projectService.GetProjectsByStatusAsync();
+            var incompleteOrInProgressProjects = await _projectService.GetProjectsByStatusAsync();
 
-			return View(incompleteOrInProgressTickets);
+			return View(incompleteOrInProgressProjects);
 
 
 		}
 
-        public async Task<IActionResult> DisplayCompletedProjects()
+		public async Task<IActionResult> DisplayInProgressProjects()
+		{
+			var inProgressTickets = await _projectService.GetProjectsByInProgressStatusAsync();
+
+			return View(inProgressTickets);
+
+
+		}
+
+		public async Task<IActionResult> DisplayCompletedProjects()
         {
             var complete = await _projectService.GetProjectsByCompletedStatusAsync();
 
@@ -155,12 +164,32 @@ namespace PTracking.Controllers
 
         }
 
+		//public async Task<IActionResult> DisplayCompanies()
+		//{
+		//	var companies = await _projectService.CountAllCompaniesAsync();
 
-        public async Task<IActionResult> PopulateEmployeeData()
+		//	return View(companies);
+
+
+		//}  work below
+		public async Task<IActionResult> CountAllCompaniesAsync()
+		{
+			var uniqueClientsCount = await _context.Tickets
+				.Select(p => p.Company)
+				.Distinct()
+				.CountAsync();
+
+			// Assuming you have a view named "UniqueClientsCount" to display the count
+			return View(uniqueClientsCount);
+		}
+
+
+		public async Task<IActionResult> PopulateEmployeeData()
 		{
 			var employees = await GetEmployeeViewModelsAsync();
 			return View(employees);
 		}
+
 
 
 		public async Task<List<EmployeeViewModel>> GetEmployeeViewModelsAsync()

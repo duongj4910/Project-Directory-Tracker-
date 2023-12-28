@@ -15,5 +15,8 @@ namespace PTracking.Services
 		Task<IEnumerable<Project>> GetProjectsByPriorityAsync();
 		Task<IEnumerable<Project>> GetProjectsByCompletedStatusAsync();
 
-    }
+		Task<IEnumerable<Project>> GetProjectsByInProgressStatusAsync();
+
+
+	}
 }

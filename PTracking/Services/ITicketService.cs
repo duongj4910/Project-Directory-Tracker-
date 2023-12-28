@@ -19,6 +19,8 @@ namespace PTracking.Services
 
 		Task<IEnumerable<Tickets>> GetSprintQuarterAsync();
 
+		Task<int> CountAllCompaniesAsync();
+
 	}
 
 	}

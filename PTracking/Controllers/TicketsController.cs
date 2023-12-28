@@ -134,6 +134,25 @@ namespace PTracking.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult ChangeUserStatus(int employeeId, string newStatus)
+        {
+            var employee = _context.Employee.Find(employeeId);
+
+            if (employee != null)
+            {
+                employee.Availability = newStatus;
+
+                _context.SaveChanges(); // Save changes to the database
+
+                return Ok("Status updated successfully");
+            }
+            else
+            {
+                return NotFound("Employee not found");
+            }
+        }
+
 
         //public async Task<IActionResult> ShowTicketSearch()
         //{
@@ -201,7 +220,7 @@ namespace PTracking.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Name,Description,ProjectName,Company,UserAssigned,AssignedBy,Status,Priority,Category,DueBy,UpdatedDate,StartDate,icon,MaxTicketsPerSprint,SprintStoryPointLimit,PointPerTicket")] Tickets tickets)
+        public async Task<IActionResult> Create([Bind("ID,Name,Description,ProjectName,Company,UserAssigned,AssignedBy,Status,Priority,Category,DueBy,UpdatedDate,StartDate,icon,MaxTicketsPerSprint,SprintStoryPointLimit,PointPerTicket,Quarter")] Tickets tickets)
         {
             if (ModelState.IsValid)
             {
@@ -233,7 +252,7 @@ namespace PTracking.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Description,ProjectName,Company,UserAssigned,AssignedBy,Status,Priority,Category,DueBy,UpdatedDate,StartDate,icon,MaxTicketsPerSprint,SprintStoryPointLimit,PointPerTicket")] Tickets tickets)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Name,Description,ProjectName,Company,UserAssigned,AssignedBy,Status,Priority,Category,DueBy,UpdatedDate,StartDate,icon,MaxTicketsPerSprint,SprintStoryPointLimit,PointPerTicket,Quarter")] Tickets tickets)
         {
             if (id != tickets.ID)
             {

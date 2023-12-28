@@ -7,16 +7,19 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PTracking.Data;
 using PTracking.Models;
+using PTracking.Services;
 
 namespace PTracking.Controllers
 {
     public class EmployeesController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IEmployeeService _employeeService;
 
-        public EmployeesController(ApplicationDbContext context)
+        public EmployeesController(ApplicationDbContext context, IEmployeeService employeeService)
         {
             _context = context;
+            _employeeService = employeeService;
         }
 
         // GET: Employees
@@ -43,9 +46,36 @@ namespace PTracking.Controllers
             return View(employee);
         }
 
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-		// GET: Category/AddOrEdit
-		public IActionResult AddOrEdit(int id = 0)
+
+
+        [HttpPost]
+        public IActionResult ChangeUserStatus(int employeeId, string newStatus)
+        {
+            var employee = _context.Employee.Find(employeeId);
+
+            if (employee != null)
+            {
+                employee.Availability = newStatus;
+
+                _context.SaveChanges(); // Save changes to the database
+
+                return Ok("Status updated successfully");
+            }
+            else
+            {
+                return NotFound("Employee not found");
+            }
+        }
+    
+
+
+    // GET: Category/AddOrEdit
+    public IActionResult AddOrEdit(int id = 0)
 		{
 			if (id == 0)
 				return View(new Employee());

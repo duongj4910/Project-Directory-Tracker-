@@ -162,8 +162,26 @@ namespace PTracking.Controllers
 			return Json(new { chartLabels = ticketNames, chartData = counts });
 		}
 
+        [HttpPost]
+        public IActionResult ChangeUserStatus(int employeeId, string newStatus)
+        {
+            var employee = _context.Employee.Find(employeeId);
 
-		public IActionResult Privacy()
+            if (employee != null)
+            {
+                employee.Availability = newStatus;
+
+                _context.SaveChanges(); // Save changes to the database
+
+                return Ok("Status updated successfully");
+            }
+            else
+            {
+                return NotFound("Employee not found");
+            }
+        }
+
+        public IActionResult Privacy()
 		{
 			return View();
 		}

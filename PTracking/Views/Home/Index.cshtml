@@ -2,401 +2,315 @@
 	var employees = ViewBag.Employees as IEnumerable<PTracking.Models.Employee>;
 }
 
-<div class="Dashboard row">
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-danger text-white rounded">
-			<div class="card-body">
-				<h6 class="card-title">
-					<a href="@Url.Action("", "Projects")" class="text-white"> Incomplete Projects</a>
-				</h6>
-				<p class="card-text">@ViewBag.IncompleteCount</p>
+
+
+<div class="row">
+	<div class="col-sm-3 mb-3">
+		<a href="@Url.Action("DisplayActiveProjects", "Projects")" style=" background-color: #120f0f; text-decoration: none;">
+			<div id="incomplete-project" class="card rounded border">
+				<div class="card-header text-white text-center" style="background-color: #120f0f">
+					Incomplete Projects
+				</div>
+				<div class="card-body text-center">
+					<span style="font-size: 30px;">
+						<i class="fas fa-diagram-project" style="font-size: 30px; margin-bottom: 10px;"></i><br>
+					</span>
+					<span style="font-size: 18px;">@ViewBag.IncompleteCount <br> Incomplete Projects </span>
+				</div>
 			</div>
-		</div>
+		</a>
 	</div>
 
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-warning text-dark rounded">
-			<div class="card-body">
-				<h6 class="card-title">
-					<a href="@Url.Action("", "Projects")" class="text-white"> In Progress Projects </a>
-				</h6>
-				<p class="card-text">@ViewBag.InProgressCount</p>
+	<div class="col-sm-3 mb-3">
+		<a href="@Url.Action("DisplayCompletedProjects", "Projects")" style="background-color: #c3d5ae; text-decoration: none;">
+			<div id="complete-count" class="card rounded border">
+				<div class="card-header text-white text-center" style="background-color:  #c3d5ae";>
+					Complete Projects
+				</div>
+				<div class="card-body text-center">
+					<span style="font-size: 30px;">
+						<i class="fa-solid fa-check" style="font-size: 30px;"></i><br>
+					</span>
+					<span style="font-size: 18px;">@ViewBag.CompleteCount <br> Complete Projects </span>
+				</div>
 			</div>
-		</div>
+		</a>
 	</div>
 
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-success text-white rounded">
-			<div class="card-body">
-				<h6 class="card-title">
-					<a href="@Url.Action("", "Projects")" class="text-white"> Complete Projects</a>
-				</h6>
-				<p class="card-text">@ViewBag.CompleteCount</p>
+	<div class="col-sm-3 mb-3">
+		<a href="@Url.Action("DisplayActiveTickets", "Tickets")" style="color:  #abcaff; text-decoration: none;">
+			<div id="active-tickets" class="card rounded">
+				<div class="card-header  text-white text-center" style="background-color: #abcaff">
+					Active Tickets
+				</div>
+				<div class="card-body text-center">
+					<span style="font-size: 30px;">
+						<i class="fa-solid fa-list" style="font-size: 30px;"></i><br>
+					</span>
+					<span style="font-size: 18px;">@ViewBag.ActiveTicketCount <br> Active Tickets </span>
+				</div>
 			</div>
-		</div>
-	</div>
-</div>
-
-<div class="Dashboard row">
-	<div class="col-md-4 mb-3">
-		<div class="card bg-danger text-white rounded">
-			<div class="card-body">
-				<h6 class="card-title">
-					<a href="@Url.Action("DisplayActiveTickets", "Tickets")" class="text-white">Active Tickets</a>
-				</h6>
-				<p class="card-text">@ViewBag.ActiveTicketCount</p>
-			</div>
-		</div>
-	</div>
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-warning text-dark rounded">
-			<div class="card-body">
-				<h6 class="card-title">
-					<a href="@Url.Action("", "Tickets")" class="text-white"> Total of High Priority Tickets</a>
-				</h6>
-				<p class="card-text">@ViewBag.PriorityTickets</p>
-			</div>
-		</div>
+		</a>
 	</div>
 
-	<div class="col-sm-4 mb-3">
-		<div class="card bg-success text-white rounded">
-			<div class="card-body">
-				<h6 class="card-title">
-					<a href="@Url.Action("", "Tickets")" class="text-white">Tickets Per Sprint</a>
-				</h6>
-				<p class="card-text">@ViewBag.PerSprint</p>
+	<div class="col-sm-3 mb-3">
+		<a href="@Url.Action("DisplayPriority", "Tickets")" style="color:  #ecd4d3; text-decoration: none;">
+			<div id="priority-tickets" class="card rounded">
+				<div class="card-header  text-white text-center" style="background-color:  #ecd4d3">
+					High Priority Tickets
+				</div>
+				<div class="card-body text-center">
+					<span style="font-size: 30px;">
+						<i class="fa-solid fa-star" style="font-size: 30px;"></i><br>
+					</span>
+					<span style="font-size: 18px;">@ViewBag.PriorityTickets <br> High Priority Tickets </span>
+				</div>
 			</div>
-		</div>
-	</div>
-
-	<div class="card bg-danger text-white rounded col-sm-4 mb-3">
-		<div class="card-body">
-			<h6 class="card-title">
-				<a href="@Url.Action("", "Employees")" class="text-white">Employees</a>
-			</h6>
-			<p class="card-text">@ViewBag.TotalNumEmployees</p>
-		</div>
+		</a>
 	</div>
 </div>
 
-		<div class="card bg-danger text-white rounded col-sm-4 mb-3">
-			<div class="card-body">
-				<h6 class="card-title">
-			<a href="@Url.Action("", "Tickets")" class="text-white">Active Clients</a>
-		</h6>
-				<p class="card-text">@ViewBag.UniqueCompanyCount</p>
+
+@*<div class="chart-container3">
+	<canvas id="ticketNamesChart" style="max-width:300px; max-height:400px;"></canvas>
+	<canvas id="pieChart" style="max-width:300px; max-height:400px;"></canvas>
+
+	<div class="col-sm-3 mb-3">
+		<div id="tickets-by-sprint" class="card rounded border-warning">
+			<div class="card-header bg-warning text-dark text-center">
+				Tickets Per Sprint
 			</div>
-</div>
+			<div class="card-body text-center">
+				<a href="@Url.Action("DisplayTicketsBySprint", "Tickets")" style="color: #c9aa2e; text-decoration: none;">
+					<span style="font-size: 30px;">
+						<i class="fa-solid fa-ticket" style="font-size: 30px;"></i><br>
+					</span>
+					<span style="font-size: 18px;">@ViewBag.PerSprint <br> Tickets Per Sprint </span>
+				</a>
+			</div>
+		</div>
+	</div>
+</div>*@
 
+		<div class="chart-container1">
+			<canvas id="activeProjects" style="max-width:300px; max-height:400px;"></canvas>
+			<canvas id="lineChart" style="max-width:300px; max-height:400px;"></canvas>
+			<canvas id="userAssigned" style="max-width:300px; max-height:400px;"></canvas>	
+		</div>
+		<div class="chart-container2">
+			<div id="employeeData">
+				<table class="table table-responsive">
+					<thead>
+						<tr>
+							<th></th>
+							<th>Name</th>
+							<th>Email</th>
+							<th> Status </th>
+							<!-- Add other column headers here -->
 
-</div>
-
-
-<div class="chart-container">
-	<canvas id="activeProjects" style="max-width:390px; max-height:430px;"></canvas>
-	<canvas id="lineChart" style="max-width:390px; max-height:430px;"></canvas>
-	<canvas id="userAssigned" style="max-width:390px; max-height:430px;"></canvas>		
-	<canvas id="ticketNamesChart" style="max-width:390px; max-height:430px;"></canvas>
-	<canvas id="pieChart" style="max-width:390px; max-height:430px;"></canvas>
-
-</div>						
-
-<!-- Your HTML content -->
-<div id="employeeData">
-	<table class="table">
-		<thead>
-			<tr>
-				<th></th>
-				<th>Name</th>
-				<th>Email</th>
-				<th> Status </th>
-				<!-- Add other column headers here -->
-				
-			</tr>
-		</thead>
-		<tbody>
-			@if (ViewBag.Employees != null)
-			{
-				foreach (var employee in ViewBag.Employees)
-				{
-					<tr>
-						<td> <img src="@employee.icon" alt="User Image" /></td>
-						<td>@employee.Name</td>
-						<td>@employee.Email</td>
-						<td>
-							@if (employee.Availability == "Available")
+						</tr>
+					</thead>
+					<tbody>
+						@if (ViewBag.Employees != null)
+						{
+							foreach (var employee in ViewBag.Employees)
 							{
-								<button type="button" class="btn btn-success custom-btn">Available</button>
+								<tr>
+									<td> <img src="@employee.icon" alt="User Image" /></td>
+									<td>@employee.Name</td>
+									<td>@employee.Email</td>
+									<td>
+										@if (employee.Availability == "Available")
+										{
+											<button type="button" class="btn btn-success custom-btn">Available</button>
+										}
+										else
+										{
+											<button type="button" class="btn btn-danger custom-btn">Unavailable</button>
+										}
+									</td>
+
+									@*	<td>
+							<a asp-action="Edit" asp-route-id="@employee.ID">Edit</a> |
+							<a asp-action="Details" asp-route-id="@employee.ID">Details</a> |
+							<a asp-action="Delete" asp-route-id="@employee.ID">Delete</a>
+							</td>*@
+									<!-- Add other columns using employee properties -->
+								</tr>
 							}
-							else
-							{
-								<button type="button" class="btn btn-danger custom-btn">Unavailable</button>
-							}
-						</td>
-					
-						@*	<td>
-				<a asp-action="Edit" asp-route-id="@employee.ID">Edit</a> |
-				<a asp-action="Details" asp-route-id="@employee.ID">Details</a> |
-				<a asp-action="Delete" asp-route-id="@employee.ID">Delete</a>
-				</td>*@
-						<!-- Add other columns using employee properties -->
-					</tr>
-				}
-			}
-			else
-			{
-				<tr>
-					<td colspan="2">No employee data available</td>
-				</tr>
-			}
-		</tbody>
-	</table>
-</div>
+						}
+						else
+						{
+							<tr>
+								<td colspan="2">No employee data available</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			
+		</div>
+		<div class="chart-container3">
+			<canvas id="ticketNamesChart" style="max-width:300px; max-height:400px;"></canvas>
+			<canvas id="pieChart" style="max-width:300px; max-height:400px;"></canvas>
+		</div>
+
+	
 
 
-@section Scripts {
-	<!-- Include necessary libraries -->
+	@section Scripts {
+@*
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>*@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-	<script>
-		// ... previous chart scripts ...
+		<script>
 
-		// Code for activeProjectsChart
-		var activeLabels = @Html.Raw(Json.Serialize(ViewBag.ProjectChartLabels));
-		var activechartData = @Html.Raw(Json.Serialize(ViewBag.ProjectChartData));
+			// Code for activeProjectsChart
+			var activeLabels = @Html.Raw(Json.Serialize(ViewBag.ProjectChartLabels));
+			var activechartData = @Html.Raw(Json.Serialize(ViewBag.ProjectChartData));
 
-		var statusColors = [
-			'rgba(75, 192, 192, 0.7)', // Color for completed
-			'rgba(255, 99, 132, 0.7)', // Color for incomplete
-			'rgba(255, 206, 86, 0.7)' // Color for in progress
-			// Add more colors for additional statuses if needed
-		];
+			var statusColors = [
+				'#84cf87', // Color for completed
+				'#ecd4d3',
+				'#21908d' // Color for in progress
+				// Add more colors for additional statuses if needed
+			];
 
-		var activeProjectsChart = new Chart(document.getElementById('activeProjects'), {
-			type: 'pie',
-			data: {
-				labels: activeLabels,
-				datasets: [{
-					data: activechartData,
-					backgroundColor: statusColors
-				}]
-			},
-			options: {
-				plugins: {
-					title: {
-						display: true,
-						text: 'Sprint Project Progress Overview', // Assign the title here
-						fontSize: 18 // Adjust the font size as needed
-					}
-					// Add chart options here if needed
-				}
-			}
-
-		});
-	</script>
-
-	<script>
-		// NUM of projects assigned
-		var uniqueMembers = @Html.Raw(Json.Serialize(ViewBag.UniqueMembers));
-		var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
-
-		var memberColors = [
-			'rgba(255, 99, 132, 0.7)',
-			'rgba(54, 162, 235, 0.7)',
-			'rgba(255, 206, 86, 0.7)'
-			// Add more colors for additional members
-		];
-
-		var ctxUserAssigned = document.getElementById('userAssigned').getContext('2d');
-		var memberChart = new Chart(ctxUserAssigned, {
-			type: 'bar',
-			data: {
-				labels: uniqueMembers,
-				datasets: [{
-					label: '# Projects Per Sprint',
-					data: memberOccurrences,
-					backgroundColor: memberColors.slice(0, uniqueMembers.length),
-					borderColor: 'rgba(54, 162, 235, 1)',
-					borderWidth: 1
-				}]
-			},
-			options: {
-				plugins: {
-					title: {
-						display: true,
-						text: 'Number of Projects Assigned', // Assign the title here
-						fontSize: 18 // Adjust the font size as needed
-					}
-					// Add chart options here if needed
-				}
-			}
-		});
-
-	</script>
-
-
-
-
-	<script>
-		var uniqueMonths = @Html.Raw(Json.Serialize(ViewBag.UniqueMonths));
-		var numOfProjects = @Html.Raw(Json.Serialize(ViewBag.NumOfProjects));
-
-		var ctxLineChart = document.getElementById('lineChart').getContext('2d');
-
-		var lineChart = new Chart(ctxLineChart, {
-			type: 'line',
-			data: {
-				labels: uniqueMonths,
-				datasets: [{
-					label: 'Number of Projects',
-					data: numOfProjects,
-					backgroundColor: 'rgba(255, 99, 132, 0.2)',
-					borderColor: 'rgba(255, 99, 132, 1)',
-					borderWidth: 1
-				}]
-			},
-			options: {
-				scales: {
-					y: {
-						beginAtZero: true
-					}
+			var activeProjectsChart = new Chart(document.getElementById('activeProjects'), {
+				type: 'pie',
+				data: {
+					labels: activeLabels,
+					datasets: [{
+						data: activechartData,
+						backgroundColor: statusColors
+					}]
 				},
-				plugins: { // Moved 'plugins' outside 'scales'
-					title: {
-						display: true,
-						text: 'Projects by Year', // Assign the title here
-						fontSize: 18 // Adjust the font size as needed
+				options: {
+					plugins: {
+						title: {
+							display: true,
+							text: 'Sprint Project Progress Overview', // Assign the title here
+							fontSize: 18
+						}
+						// Add chart options here if needed
 					}
-					// Add chart options here if needed
 				}
-			}
-		});
-	</script>
 
+			});
+		</script>
 
+		<script>
+			// NUM of projects assigned
+			var uniqueMembers = @Html.Raw(Json.Serialize(ViewBag.UniqueMembers));
+			var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
 
-	<script>
-		// Get data from ViewBag
-		var chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
-		var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+			var memberColors = [
+				'#f9eb1c',
+				'#25321c',
+				'#c3d5ae'
+				// Add more colors for additional members
+			];
 
-		var statusColors = [
-			'rgba(75, 192, 192, 0.7)', // Color for completed
-			'rgba(255, 99, 132, 0.7)', // Color for incomplete
-			'rgba(255, 206, 86, 0.7)' // Color for in progress
-			// Add more colors for additional statuses if needed
-		];
-
-		var pieChart = new Chart(document.getElementById('pieChart'), {
-			type: 'pie',
-			data: {
-				labels: chartLabels,
-				datasets: [{
-					data: chartData,
-					backgroundColor: statusColors
-				}]
-			},
-			options: {
-				plugins: {
-					title: {
-						display: true,
-						text: 'Sprint Ticket Progress Overview', // Assign the title here
-						fontSize: 18 // Adjust the font size as needed
+			var ctxUserAssigned = document.getElementById('userAssigned').getContext('2d');
+			var memberChart = new Chart(ctxUserAssigned, {
+				type: 'bar',
+				data: {
+					labels: uniqueMembers,
+					datasets: [{
+						label: '# Projects Per Sprint',
+						data: memberOccurrences,
+						backgroundColor: memberColors.slice(0, uniqueMembers.length),
+						borderColor: 'rgba(54, 162, 235, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					plugins: {
+						title: {
+							display: true,
+							text: 'Number of Projects Assigned', // Assign the title here
+							fontSize: 18
+						}
+						// Add chart options here if needed
 					}
-					// Add chart options here if needed
 				}
-			}
-		});
-	</script>
+			});
+
+		</script>
 
 
 
 
+		<script>
+			var uniqueMonths = @Html.Raw(Json.Serialize(ViewBag.UniqueMonths));
+			var numOfProjects = @Html.Raw(Json.Serialize(ViewBag.NumOfProjects));
 
+			var ctxLineChart = document.getElementById('lineChart').getContext('2d');
 
-
-
-	@*	<script>
-
-User Task Assignment Summary
-
-		var _chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
-		var _chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
-
-		var ticketNames = _chartLabels.map(function (label) {
-			return 'Ticket ' + label;
-		});
-
-		var barColor = ["green", "blue", "orange", "brown"]; // Define your colors as needed
-
-		var ctxMyChart = document.getElementById('ticketComplete').getContext('2d');
-		var myChart = new Chart(ctxMyChart, {
-			type: "bar",
-			data: {
-				labels: ticketNames,
-				datasets: [{
-					backgroundColor: barColor.slice(0, _chartData.length), // Use colors based on data length
-					data: _chartData
-				}]
-			},
-			options: {
-				title: {
-					display: true,
-					text: 'Sprint Ticket Progress Overview', // Assign the title here
-					fontSize: 18 // Adjust the font size as needed
+			var lineChart = new Chart(ctxLineChart, {
+				type: 'line',
+				data: {
+					labels: uniqueMonths,
+					datasets: [{
+						label: 'Number of Projects',
+						data: numOfProjects,
+						backgroundColor: 'rgba(255, 99, 132, 0.2)',
+						borderColor: 'rgba(255, 99, 132, 1)',
+						borderWidth: 1
+					}]
+				},
+				options: {
+					scales: {
+						y: {
+							beginAtZero: true
+						}
+					},
+					plugins: { // Moved 'plugins' outside 'scales'
+						title: {
+							display: true,
+							text: 'Projects by Year', // Assign the title here
+							fontSize: 18
+						}
+						// Add chart options here if needed
+					}
 				}
-			}
-		});
-	</script>*@
+			});
+		</script>
 
 
 
+		<script>
+			// Get data from ViewBag
+			var chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
+			var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
+			console.log(chartData);
+			var statusColors = [
+				'#84cf87', // Color for completed
+				'#ecd4d3', // Color for incomplete
+				'#f9eb1c' // Color for in progress
+				// Add more colors for additional statuses if needed
+			];
 
-	@*	<script>
-
-		// This part is for the myChart based on ViewBag data
-		var _chartLabels = @Html.Raw(Json.Serialize(ViewBag.ChartLabels));
-		var _chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
-
-		var ticketNames = _chartLabels.map(function (label) {
-			return 'Ticket ' + label;
-		});
-
-		var barColor = ["red", "green", "blue", "orange", "brown"]; // Define your colors as needed
-
-		var ctxMyChart = document.getElementById('myChart').getContext('2d');
-		var myChart = new Chart(ctxMyChart, {
-			type: "bar",
-			data: {
-				labels: ticketNames,
-				datasets: [{
-					backgroundColor: barColor.slice(0, _chartData.length), // Use colors based on data length
-					data: _chartData
-				}]
-			}
-		});
-
-	</script>*@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+			var pieChart = new Chart(document.getElementById('pieChart'), {
+				type: 'pie',
+				data: {
+					labels: chartLabels,
+					datasets: [{
+						data: chartData,
+						backgroundColor: statusColors
+					}]
+				},
+				options: {
+					plugins: {
+						title: {
+							display: true,
+							text: 'Sprint Ticket Progress Overview', // Assign the title here
+							fontSize: 18
+						}
+						// Add chart options here if needed
+					}
+				}
+			});
+		</script>
 
 	<script>
 		// Get data from ViewBag
@@ -404,9 +318,9 @@ User Task Assignment Summary
 		var categoryData = @Html.Raw(Json.Serialize(ViewBag.CategoryCt));
 
 		var statusColors = [
-			'rgba(75, 192, 192, 0.7)', // Color for completed
-			'rgba(255, 99, 132, 0.7)', // Color for incomplete
-			'rgba(255, 206, 86, 0.7)' // Color for in progress
+				'#84cf87', // Color for completed
+				'#25321c', // Color for incomplete
+				'#f9eb1c' // Color for in progress
 			// Add more colors for additional statuses if needed
 		];
 
@@ -424,7 +338,7 @@ User Task Assignment Summary
 					title: {
 						display: true,
 						text: 'Current Project Categories Overview', // Assign the title here
-						fontSize: 18 // Adjust the font size as needed
+						fontSize: 18
 					}
 					// Add chart options here if needed
 				}
@@ -451,7 +365,7 @@ User Task Assignment Summary
 					var _chartLabels = data.chartLabels;
 					var _chartData = data.chartData;
 
-					var barColor = ["red", "green", "blue", "orange", "brown"]; // Define your colors as needed
+						var barColor = ["#c3d5ae", "#ecd4d3", "#84cf87", "#21908d", "#c3d5ae"]; // Define your colors as needed
 
 					var ctxMyChart = document.getElementById('ticketNamesChart').getContext('2d');
 					var myChart = new Chart(ctxMyChart, {
@@ -468,7 +382,7 @@ User Task Assignment Summary
 								title: {
 									display: true,
 									text: 'Points Assigned per Ticket', // Assign the title here
-									fontSize: 18 // Adjust the font size as needed
+									fontSize: 18
 								}
 								// Add chart options here if needed
 							}
@@ -485,19 +399,45 @@ User Task Assignment Summary
 	</script>
 
 
-    }
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			$(document).ready(function () {
+				$('.custom-btn').on('click', function () {
+					var btn = $(this);
+					btn.prop('disabled', true); // Disable the clicked button
+					btn.text('Processing...'); // Change button text to indicate processing
+
+					var employeeId = btn.data('employee-id'); // Get employee ID from data attribute or any other method
+
+					// Simulated delay for demonstration purposes (replace this with your actual logic)
+					setTimeout(function () {
+						var newStatus = 'Unavailable'; // Replace with the actual updated status
+
+						// Perform AJAX call to update the server with the new status
+						$.ajax({
+							url: "/Employees/ChangeUserStatus", // Replace with your server endpoint
+							method: 'POST', // Use appropriate HTTP method (POST, PUT, etc.)
+							data: { employeeId: employeeId, newStatus: newStatus }, // Send employee ID and new status
+							success: function (response) {
+
+							},
+							error: function (error) {
+
+							},
+							complete: function () {
+								btn.text(newStatus);
+								btn.prop('disabled', false);
+								btn.css('background-color', 'red');
+							}
+						});
+
+					}, 2000);
+				});
+			});
+		</script>
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
+}

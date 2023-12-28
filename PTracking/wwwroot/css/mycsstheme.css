@@ -706,7 +706,7 @@ progress {
 
 .initialism {
     font-size: 0.875em;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
 .blockquote {
@@ -8957,7 +8957,7 @@ textarea.form-control-lg {
 }
 
 .text-uppercase {
-    text-transform: uppercase !important;
+  /*  text-transform: uppercase !important;*/
 }
 
 .text-capitalize {
@@ -9284,7 +9284,7 @@ textarea.form-control-lg {
 }
 
 .bg-primary {
-    --bs-bg-opacity: 1;
+    --bs-bg-opacity: .8;
     background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
 }
 
@@ -9314,7 +9314,7 @@ textarea.form-control-lg {
 }
 
 .bg-light {
-    --bs-bg-opacity: 1;
+    --bs-bg-opacity: .8;
     background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;
 }
 
@@ -9329,17 +9329,17 @@ textarea.form-control-lg {
 }
 
 .bg-white {
-    --bs-bg-opacity: 1;
+    --bs-bg-opacity: .8;
     background-color: rgba(var(--bs-white-rgb), var(--bs-bg-opacity)) !important;
 }
 
 .bg-body {
-    --bs-bg-opacity: 1;
+    --bs-bg-opacity: .8;
     background-color: rgba(var(--bs-body-bg-rgb), var(--bs-bg-opacity)) !important;
 }
 
 .bg-transparent {
-    --bs-bg-opacity: 1;
+    --bs-bg-opacity: .8;
     background-color: transparent !important;
 }
 
@@ -13415,9 +13415,9 @@ textarea.form-control-lg {
 }
 
 .navbar {
-    font-size: 0.875rem;
-    font-weight: 600;
-    text-transform: uppercase;
+    font-size:1.0rem;
+    font-weight: 900;
+    /*text-transform: uppercase;*/
 }
 
 .navbar-nav .nav-link {
@@ -13496,7 +13496,7 @@ h5,
 .h5,
 h6,
 .h6 {
-    text-transform: uppercase;
+   /* text-transform: uppercase;*/
     letter-spacing: 3px;
 }
 
@@ -13506,7 +13506,7 @@ h6,
 
 th {
     font-size: 0.875rem;
-    text-transform: uppercase;
+    /*text-transform: uppercase;*/
 }
 
 .table th,
@@ -13517,7 +13517,6 @@ th {
 .table-sm th,
 .table-sm td {
     padding: 0.75rem;
-    font-weight: normal;
 }
 
 .dropdown-menu {

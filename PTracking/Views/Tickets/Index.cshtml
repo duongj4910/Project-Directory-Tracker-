@@ -12,95 +12,128 @@
 </head>
 <body>
 
-	<div class="container-fluid">
-		<div class="row">
-			<!-- Cards section -->
-			<div class="col-md-4 mb-3">
-				<div class="card bg-danger text-white rounded">
-					<div class="card-body">
-						<h6 class="card-title">
-							<a href="@Url.Action("DisplayActiveTickets", "Tickets")" class="text-white">Active Tickets</a>
-						</h6>
-						<p class="card-text">@ViewBag.ActiveTicketCount</p>
-					</div>
+
+
+			<div class="row">
+				<div class="col-sm-4 mb-3">
+			<a href="@Url.Action("DisplayActiveTickets", "Tickets")" style="background-color:#25321c; text-decoration: none;">
+						<div id="active-Projects" class="card rounded">
+					<div class="card-header  text-white text-center" style="background-color: #25321c">
+								Active Tickets
+							</div>
+							<div class="card-body text-center">
+								<span style="font-size: 30px;">
+									<i class="fas fa-diagram-project" style="font-size: 30px; margin-bottom: 10px;"></i><br>
+								</span>
+								<span style="font-size: 18px;">@ViewBag.ActiveTicketCount <br> Active Tickets </span>
+							</div>
+						</div>
+					</a>
+				</div>
+
+				<div class="col-sm-4 mb-3">
+					<a href="@Url.Action("DisplayPriority", "Tickets")" style="background-color: #c3d5ae; text-decoration: none;">
+						<div id="allProjects" class="card rounded">
+							<div class="card-header  text-white text-center" style="background-color:  #c3d5ae;">
+						Total of High Priority Tickets
+							</div>
+							<div class="card-body text-center">
+								<span style="font-size: 30px;">
+									<i class="fa-solid fa-check" style="font-size: 30px;"></i><br>
+								</span>
+								<span style="font-size: 18px;">@ViewBag.PriorityTickets <br> Total of High Priority Tickets </span>
+							</div>
+						</div>
+					</a>
+				</div>
+
+				<div class="col-sm-4 mb-3">
+					<a href="@Url.Action("DisplayTicketsBySprint", "Tickets")" style="background-color:#ecd4d3; text-decoration: none;">
+						<div id="priority-projects" class="card rounded">
+							<div class="card-header  text-white text-center" style="background-color:#ecd4d3;">
+						Tickets Per Sprint
+							</div>
+							<div class="card-body text-center">
+								<span style="font-size: 30px;">
+									<i class="fa-solid fa-list" style="font-size: 30px;"></i><br>
+								</span>
+								<span style="font-size: 18px;">@ViewBag.PerSprint <br> Tickets Per Sprint</span>
+							</div>
+						</div>
+					</a>
 				</div>
 			</div>
-			<div class="col-md-4 mb-3">
-				<div class="card bg-warning text-dark rounded">
-					<div class="card-body">
-						<h6 class="card-title">
-							<a href="@Url.Action("DisplayPriority", "Tickets")" class="text-white">Total of High Priority Tickets </a>
-						</h6>
-						<p class="card-text">@ViewBag.PriorityTickets</p>
-					</div>
-				</div>
-			</div>
-			<div class="col-md-4 mb-3">
-				<div class="card bg-success text-white rounded">
-					<div class="card-body">
-						<h6 class="card-title">
-							<a href="@Url.Action("DisplayTicketsBySprint", "Tickets")" class="text-white"> Tickets Per Sprint </a>
-						</h6>
-						<p class="card-text">@ViewBag.PerSprint</p>
-					</div>
-				</div>
-			</div>
-			<!-- Charts and data section -->
-			<div class="col-md-6">
+
+
+
+
+
+			<div class="container">
 				<div class="row">
-					<div class="chart col-md-12">
-						<canvas id="ticketComplete" class="chart-canvas"></canvas>
+				
+					<div class="col-md-6">
+						<div class="chart-container-tickets">
+							<div class="chart">
+								<canvas id="ticketComplete" class="chart-canvas-tickets"></canvas>
+							</div>
+							<div class="chart">
+								<canvas id="pieChart" class="chart-canvas-tickets"></canvas>
+							</div>
+						</div>
 					</div>
-					<div class="chart col-md-12">
-						<canvas id="pieChart" class="chart-canvas"></canvas>
+
+					
+					<div class="col-md-6">
+						<div class="data-container">
+							<div class="employee-table">
+								<table class="table table1">
+									<thead>
+										<tr>
+											<th></th>
+											<th>Name</th>
+											<th>Email</th>
+											<th>Status</th>
+										</tr>
+									</thead>
+									<tbody>
+										@if (ViewBag.Employees != null)
+										{
+											foreach (var employee in ViewBag.Employees)
+											{
+												<tr>
+													<td><img src="@employee.icon" alt="User Image" /></td>
+											<td>@employee.Name</td>
+													<td>@employee.Email</td>
+													<td>
+														@if (employee.Availability == "Available")
+														{
+															<button type="button" class="btn btn-success custom-btn">Available</button>
+														}
+														else
+														{
+															<button type="button" class="btn btn-danger custom-btn">Unavailable</button>
+														}
+													</td>
+												</tr>
+											}
+										}
+										else
+										{
+											<tr>
+												<td colspan="4">No employee data available</td>
+											</tr>
+										}
+									</tbody>
+								</table>
+							</div>
+							<div class="chart">
+								<canvas id="userAssigned" class="chart-canvas-tickets"></canvas>
+							</div>
+							<div class="chart">
+								<canvas id="ticketNamesChart" class="chart-canvas-tickets"></canvas>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
-			<div class="col-md-6">
-				<div id="employeeData">
-					<table class="table table1">
-						<thead>
-							<tr>
-								<th></th>
-								<th>Name</th>
-								<th>Email</th>
-								<th>Status</th>
-							</tr>
-						</thead>
-						<tbody>
-							@if (ViewBag.Employees != null)
-							{
-								foreach (var employee in ViewBag.Employees)
-								{
-									<tr>
-										<td><img src="@employee.icon" alt="User Image" /></td>
-										<td>@employee.Name</td>
-										<td>@employee.Email</td>
-										<td>
-											@if (employee.Availability == "Available")
-											{
-												<button type="button" class="btn btn-success custom-btn">Available</button>
-											}
-											else
-											{
-												<button type="button" class="btn btn-danger custom-btn">Unavailable</button>
-											}
-										</td>
-									</tr>
-								}
-							}
-							else
-							{
-								<tr>
-									<td colspan="4">No employee data available</td>
-								</tr>
-							}
-						</tbody>
-					</table>
-				</div>
-				<div>
-					<canvas id="userAssigned" class="chart-canvas"></canvas>
-					<canvas id="ticketNamesChart" class="chart-canvas"></canvas>
 				</div>
 			</div>
 
@@ -109,6 +142,11 @@
 
 		var ticketList = ViewBag.Tickets as IEnumerable<Tickets>;
 	}
+
+	<p>
+		<a href="@Url.Action("Create")" class="btn btn-primary">Create New</a>
+	</p>
+
 
 	<div class="table-responsive" style="overflow-x: auto;">
 		<table id="ticketsTable" class="table table-responsive table-bordered">	
@@ -140,16 +178,11 @@
 						Priority
 					</th>
 					<th>
-						Category
-					</th>
-					<th>
 						DueBy
 					</th>
-					<th>
-						Start Date
-					</th>
+				
 				</tr>
-			</thead>>
+			</thead>
 			<tbody>
 				@if (ViewBag.Tickets != null)
 				{
@@ -157,7 +190,7 @@
 					{
 
 						<tr>
-							<td>@item.Name</td>
+							<td><a href="/Tickets/Details/@item.ID">@item.Name</a></td>
 							<td>@item.Description</td>
 							<td>@item.ProjectName</td>
 							<td>@item.Company</td>
@@ -165,10 +198,9 @@
 							<td>@item.AssignedBy</td>
 							<td>@item.Status</td>
 							<td>@item.Priority</td>
-							<td>@item.Category</td>
 							<td>@item.DueBy</td>
-							<td>@item.StartDate</td>
-
+							
+									
 
 						</tr>
 					}
@@ -184,11 +216,6 @@
 	</div>
 	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
-
-
-
-
-
 
 
 @section Scripts {
@@ -207,8 +234,8 @@
 		var chartData = @Html.Raw(Json.Serialize(ViewBag.ChartData));
 
 		var statusColors = [
-			'rgba(75, 192, 192, 0.7)', // Color for completed
-			'rgba(255, 99, 132, 0.7)', // Color for incomplete
+				'#c3d5ae', // Color for completed
+				'#ecd4d3', // Color for incomplete
 			'rgba(255, 206, 86, 0.7)' // Color for in progress
 			
 		];
@@ -218,8 +245,9 @@
 			data: {
 				labels: chartLabels,
 				datasets: [{
-					data: chartData,
-					backgroundColor: statusColors
+					data: chartData, 
+					backgroundColor: statusColors,
+					label: 'Ticket Status'
 				}]
 			},
 			options: {
@@ -234,9 +262,11 @@
 		var memberOccurrences = @Html.Raw(Json.Serialize(ViewBag.MemberOccurrences));
 
 		var memberColors = [
-			'rgba(255, 99, 132, 0.7)',
-			'rgba(54, 162, 235, 0.7)',
-			'rgba(255, 206, 86, 0.7)'
+				'#c3d5ae',
+				'#f9eb1c',
+				'#21908d',
+				'#25321c'
+					
 			
 		];
 
@@ -270,7 +300,7 @@
 			return 'Ticket ' + label;
 		});
 
-		var barColor = ["red", "green", "blue", "orange", "brown"]; 
+			var barColor = ["#c3d5ae", "##120f0f", "#21908d", "#f9eb1c", "brown"];
 
 		var ctxMyChart = document.getElementById('ticketComplete').getContext('2d');
 		var myChart = new Chart(ctxMyChart, {
@@ -279,7 +309,8 @@
 				labels: ticketNames,
 				datasets: [{
 					backgroundColor: barColor.slice(0, _chartData.length), 
-					data: _chartData
+					data: _chartData,
+					label: 'Ticket Status Overview'
 				}]
 			}
 		});
@@ -313,45 +344,95 @@
 
 	</script>*@
 
-
-
 	<script>
-		// This part is for the myChart based on AJAX calling the C# function
-		fetchDataAndRenderChart();
+    fetchDataAndRenderChart();function fetchDataAndRenderChart() {
+        $.ajax({
+            type: "POST",
+            url: "/Tickets/GetUserAssigned",
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
 
-		function fetchDataAndRenderChart() {
-			$.ajax({
-				type: "POST",
-				url: "/Tickets/GetUserAssigned", // Replace YourController with your actual controller name
-				contentType: "application/json; charset=utf-8",
-				dataType: "json",
-				success: function (data) {
-					// Process the returned data here and render your chart
-					var _chartLabels = data.chartLabels;
-					var _chartData = data.chartData;
+                var _chartLabels = data.chartLabels;
+                var _chartData = data.chartData;
 
-					var barColor = ["red", "green", "blue", "orange", "brown"]; // Define your colors as needed
+						var barColor = ["#ecd4d3", "#f9eb1c", "#21908d", "#84cf87", "blue", "pink"];
 
-					var ctxMyChart = document.getElementById('ticketNamesChart').getContext('2d');
-					var myChart = new Chart(ctxMyChart, {
-						type: "bar",
-						data: {
-							labels: _chartLabels, // Use ticket names retrieved from the server as labels
-							datasets: [{
-								backgroundColor: barColor.slice(0, _chartData.length), // Use colors based on data length
-								data: _chartData
-							}]
-						}
-					});
-				},
-				error: function (err) {
-					// Handle errors here
-					console.error(err);
-				}
+                var ctxMyChart = document.getElementById('ticketNamesChart').getContext('2d');
+                var myChart = new Chart(ctxMyChart, {
+                    type: "bar",
+                    data: {
+                        labels: _chartLabels,
+                        datasets: [{
+                            backgroundColor: barColor.slice(0, _chartData.length),
+                            data: _chartData,
+                            label: 'Ticket/Task Point Allocation'
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    fontSize: 16, 
+                                }
+                            }],
+                            xAxes: [{
+                                ticks: {
+                                    fontSize: 16,
+                                   
+                                }
+                            }]
+                        }
+                    }
+                });
+            },
+
+    
+            error: function (err) {
+                // Handle errors here
+                console.error(err);
+            }
+        });
+    }
+</script>
+
+
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<script>
+			$(document).ready(function () {
+				$('.custom-btn').on('click', function () {
+					var btn = $(this);
+					btn.prop('disabled', true); 
+					btn.text('Processing...'); 
+
+					var employeeId = btn.data('employee-id'); 
+
+					
+					setTimeout(function () {
+						var newStatus = 'Unavailable'; 
+
+						
+						$.ajax({
+							url: "/Employees/ChangeUserStatus", 
+							method: 'POST',
+							data: { employeeId: employeeId, newStatus: newStatus }, 
+							success: function (response) {
+
+							},
+							error: function (error) {
+
+							},
+							complete: function () {
+								btn.text(newStatus);
+								btn.prop('disabled', false);
+								btn.css('background-color', 'red');
+							}
+						});
+
+					}, 2000);
+				});
 			});
-		}
-
-	</script>
+		</script>
 	}
 	</body>
 	</html>

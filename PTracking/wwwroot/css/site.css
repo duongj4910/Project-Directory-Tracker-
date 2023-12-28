@@ -2,10 +2,268 @@ html {
   font-size: 14px;
 }
 
-@media (min-width: 768px) {
-  html {
+
+
+.show-label {
+    display: flex;
+    align-items: center;
+    margin-right: 20px; /* Adjust margin as needed */
+}
+
+.show-label label,
+    .show-label select {
+        margin-right: 20px; /* Adjust margin as needed */
+    }
+
+
+div.dataTables_length {
+    /* Adding padding */
+    padding: 20px;
+    /* Adding margin */
+    margin: 10px;
+}
+
+div.dataTables_info {
+    
+    padding: 15px;
+    
+    margin: 10px 0; 
+}
+
+/* Targeting the element with class 'dataTables_paginate' */
+div.dataTables_paginate {
+    /* Adding padding */
+    padding: 10px;
+    /* Adding margin */
+    margin: 20px 0; /* Adjust margin as needed */
+}
+
+.card a {
+    text-decoration: none;
+    color: aqua;
+}
+
+#myRow {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    background-image: url('/icon/bg.jpg');
+}
+
+
+#priority-projects:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShMvJonfUbBVtGE2OOUX22y8AhtfxrQzJ-2w&usqp=CAU');
+    background-size: cover;
+    border: 2px solid #d7fce1;
+    opacity: 0.14;
+    background-size: 100% 100%;
+    background-position: right;
+}
+
+#active-Projects:before,
+#completed-Projects:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShMvJonfUbBVtGE2OOUX22y8AhtfxrQzJ-2w&usqp=CAU');
+    background-size: cover;
+    border: 2px solid #d7fce1;
+    opacity: 0.13;
+    background-size: 200% 200%;
+    background-position: right;
+}
+#allProjects:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcShMvJonfUbBVtGE2OOUX22y8AhtfxrQzJ-2w&usqp=CAU');
+    background-size: cover;
+    border: 2px solid #d7fce1;
+    opacity: 0.15;
+    background-size: 100% 100%;
+    background-position: left;
+}
+#tickets-by-sprint:before,
+#incomplete-project:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('https://th.bing.com/th/id/R.9fe6b44c1802d58b20d14b7a9e80cbd7?rik=N5KDhY76k3ZPHA&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f7%2fAbstract-Wave-Background-PNG.png&ehk=yAUkvaqj2BUc7ZYx%2fJZVE8%2f9oLNYJEvfjhEPjm8ESqY%3d&risl=&pid=ImgRaw&r=0');
+    background-size: cover;
+    border: 2px solid #0362fc;
+    opacity: 0.1;
+    background-size: 300% 300%;
+    background-position: right;
+}
+#company:before,
+#display-in-progress-project:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('https://th.bing.com/th/id/R.9fe6b44c1802d58b20d14b7a9e80cbd7?rik=N5KDhY76k3ZPHA&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f7%2fAbstract-Wave-Background-PNG.png&ehk=yAUkvaqj2BUc7ZYx%2fJZVE8%2f9oLNYJEvfjhEPjm8ESqY%3d&risl=&pid=ImgRaw&r=0');
+    background-size: cover;
+    border: 2px solid #0362fc;
+    opacity: 0.2;
+    background-size: 300% 300%;
+    background-position: left;
+}
+#complete-count:before,
+#employeeCount:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('https://th.bing.com/th/id/R.9fe6b44c1802d58b20d14b7a9e80cbd7?rik=N5KDhY76k3ZPHA&riu=http%3a%2f%2fwww.pngmart.com%2ffiles%2f7%2fAbstract-Wave-Background-PNG.png&ehk=yAUkvaqj2BUc7ZYx%2fJZVE8%2f9oLNYJEvfjhEPjm8ESqY%3d&risl=&pid=ImgRaw&r=0');
+    background-size: cover;
+    border: 2px solid #0362fc;
+    opacity: 0.1;
+    background-size: 380% 380%;
+    background-position: right;
+}
+
+
+#priority-tickets:before,
+#active-tickets:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    background-image: url('https://www.pngkey.com/png/detail/238-2383266_line-graph-png-transparent-line-graph-png.png');
+    background-size: cover;
+    border: 2px solid #0362fc;
+    opacity: 0.1;
+    background-size: 320% 320%;
+    background-position: left;
+}
+
+/*.card {
+    height: 159px;
+    padding: 20px;*/ /* Adjust the padding as needed */
+    /*font-weight: bold;*/ /* Increase font weight */
+    /*border-radius: 10px;*/ /* Add rounded corners */
+    /*box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);*/ /* Add shadow for depth */
+    /*transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;*/ /* Add transition for smoothness */
+    /*font-family: 'Arial', sans-serif;*/ /* Change the font family */
+    /*position: relative;
+    z-index: 2;
+}
+    .card:hover {
+        transform: scale(1.05);*/ /* Enlarge a bit on hover */
+        /*box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);*/ /* Enhance shadow on hover */
+    /*}
+
+.card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-title {
+    margin-bottom: 20px;
+    z-index: 99;
+
+}*/
+
+.card {
+    height: 250px;
+ /*   width: 100%;*/
+    max-width: 400px;
+    padding: 0; 
+    border-radius: 10px; /* Add rounded corners */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); /* Add shadow for depth */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; /* Add transition for smoothness */
+    /*font-family: 'Arial', sans-serif;*/ /* Change the font family */
+    position: relative;
+    z-index: 2;
+}
+
+.card-header {
     font-size: 16px;
-  }
+    font-weight: bold;
+    border-radius: 10px 10px 0 0;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+}
+
+.custom-text-size {
+    font-size: 15px;
+}
+
+.card-text {
+    font-size: 18px;
+    text-align: center;
+}
+
+.col h6 {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+}
+
+.col p {
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+}
+
+.custom-img {
+    max-width: 56px; /* Max width of the image */
+    max-height: 54px; /* Max height of the image */
+    width: auto; /* Maintain aspect ratio */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Ensures the image is centered */
+    margin: auto; /* Centers the image within the card */
+}
+
+
+.card.border-danger.mb-3 {
+    padding: 15px;
+    margin: 15px;
+    border-radius: 10px;
+}
+@media (max-width: 925px){
+
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
@@ -18,18 +276,50 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
-    padding: 40px 40px 60px;
+    margin-bottom: 100px;
+    padding: 50px 50px 70px;
+    height: 100vh;
+    background-image: url('/icon/bg.jpg');
+    background-size: cover;
+    background-color: rgba(255, 255, 255, 0.8); /* Adjust alpha value */
 }
+.custom-bg-white {
+    background-color: rgba(255, 255, 255, 0.8) !important; /* Adjust the opacity as needed */
+}
+
+
+.sidebar{
+    background-color: #000;
+}
+
+canvas {
+    margin: 15px 0px;
+}
+
 .chart-canvas {
     max-width: 390px;
     max-height: 430px;
 }
-.chart-container {
+
+.chart-container3 {
     display: flex;
     flex-wrap: wrap;
+    justify-content: start;
+    gap: 20px;
+}
+.chart-container1 {
+    display: flex;
+    justify-content: space-between;
     gap: 20px; 
 }
+
+.chart-container-project1, .chart-container-project2 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 20px;
+}
+
 .table1 {
     border-collapse: collapse;
     width: 100%;
@@ -86,33 +376,21 @@ body {
         background-color: #f2f2f2; 
     }
 
-    /* Alternate row background color for better readability */
+     Alternate row background color for better readability 
     .table tbody tr:nth-child(even) {
         background-color: #f9f9f9;
     }
 
-    /* Hover effect */
+     Hover effect 
     .table tbody tr:hover {
         background-color: #e5e5e5;
     }
 
-{
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
-    gap: 20px; 
-    max-width: 100%; 
-}
-
-.chart-container canvas {
-    width: 100%;
-    max-width: 400px; 
-    max-height: 430px; 
-    border-radius: 10px; 
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
-}
 
 .custom-btn {
     border-radius: 10px; 
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); 
 
 }
+
+

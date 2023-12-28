@@ -77,6 +77,20 @@ namespace PTracking.Services
 			return await _context.Tickets.ToListAsync();
 		}
 
+		public async Task<int> CountAllCompaniesAsync()
+		{
+			var uniqueClientsCount = await _context.Tickets
+			.Select(p => p.Company) // Select the Company field
+			.Distinct() // Get distinct values
+			.ToListAsync(); // Materialize the distinct values asynchronously
+
+			var count = uniqueClientsCount.Count;
+
+			return count;
+		}
+
+
+
 	}
 
 }

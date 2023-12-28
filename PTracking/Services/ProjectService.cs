@@ -71,7 +71,17 @@ namespace PTracking.Services
 
 			return incompleteOrInProgressProjects;
 		}
-        public async Task<IEnumerable<Project>> GetProjectsByCompletedStatusAsync()
+
+		public async Task<IEnumerable<Project>> GetProjectsByInProgressStatusAsync()
+		{
+			var inProgressProjects = await _context.Project
+				.Where(t => t.Status == "In progress")
+				.ToListAsync();
+
+			return inProgressProjects;
+		}
+
+		public async Task<IEnumerable<Project>> GetProjectsByCompletedStatusAsync()
         {
             var complete = await _context.Project
                 .Where(t => t.Status == "Completed")

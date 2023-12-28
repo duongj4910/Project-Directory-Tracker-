@@ -9,64 +9,63 @@
     <link rel="stylesheet" href="~/css/mycsstheme.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PTracking.styles.css" asp-append-version="true" />
+    <script src="https://kit.fontawesome.com/a365c731da.js" crossorigin="anonymous"></script>
+
 </head>
 <body>
                 <header>
                     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                        <div class="container-fluid">
+                        <div class="container">
                             <div class="row">
                                 <!-- Sidebar -->
                                 <nav class="col-md-2 d-none d-md-block bg-light sidebar">
                                     <div class="position-sticky">
                                         <div class="list-group list-group-flush">
-                                            <!-- Add a link for notifications -->
-                                            <a href="#" class="list-group-item list-group-item-action">Notifications</a>
-                                            <!-- Other sidebar links -->
-                                            <a href="#" class="list-group-item list-group-item-action">Home</a>
-                                            <a href="#" class="list-group-item list-group-item-action">Upcoming Tasks</a>
-                                            <a href="#" class="list-group-item list-group-item-action">Active Projects</a>
-                                            <a href="#" class="list-group-item list-group-item-action">Sales</a>
-                                            <a href="#" class="list-group-item list-group-item-action">Employee Data</a>
+                                <a href="/home" class="list-group-item list-group-item-action">Home</a>
+                                <a href="/notifications" class="list-group-item list-group-item-action">Notifications</a> 
+                                            <a href="/tickets" class="list-group-item list-group-item-action">Upcoming Tasks</a>
+                                            <a href="/projects" class="list-group-item list-group-item-action">Active Projects</a>
+                                            <a href="/employees" class="list-group-item list-group-item-action">Employee Data</a>
                                         </div>
                                     </div>
                                 </nav>
 
-                                <!-- Main content area -->
-                                <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
-                                    <!-- Navbar -->
-                                    <header>
-                                        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-                                            <div class="container-fluid">
-                                                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">PTracking</a>
-                                                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                                        aria-expanded="false" aria-label="Toggle navigation">
-                                                    <span class="navbar-toggler-icon"></span>
-                                                </button>
-                                                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                                                    <ul class="navbar-nav flex-grow-1">
-                                                        <li class="nav-item">
-                                                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link text-dark" asp-area="" asp-controller="Tickets" asp-action="Index">Upcoming Tasks</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link text-dark" asp-area="" asp-controller="Projects" asp-action="Index">Active Projects</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link text-dark" asp-area="" asp-controller="Sales" asp-action="Index">Sales</a>
-                                                        </li>
-                                                        <li class="nav-item">
-                                                            <a class="nav-link text-dark" asp-area="" asp-controller="Employees" asp-action="Index">Employee Data</a>
-                                                        </li>
-                                                    </ul>
-                                                    <partial name="_LoginPartial" />
-                                                </div>
-                                            </div>
-                                        </nav>
-                                    </header>
+                    <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4">
+                        <header>
+                            <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+                                <div class="container-fluid">
+                                    <a class="navbar-brand d-flex align-items-center" asp-area="" asp-controller="Home" asp-action="Index">
+                                        <img src="\icon\Captur5.jpg" class="card-img-top img-fluid" style="max-width: 56px; height: auto; max-height: 54px; margin-right: 10px;" alt="Image">
+                                        <div>
+                                            <h1>Welcome, User!</h1>
+                                            <p>Cheers, and happy activities</p>
+                                        </div>
+                                    </a>
+                                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
+                                            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                                        <span class="navbar-toggler-icon"></span>
+                                    </button>
+                                    <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+                                        <ul class="navbar-nav">
+                                            <li class="nav-item">
+                                                <!-- Use an image tag for the search icon -->
+                                                <a class="nav-link text-dark d-flex align-items-center" asp-area="" asp-controller="Tickets" asp-action="ShowTicketSearch">
+                                                    <span class="mr-2">Search</span>
+                                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRuBqqaaFC4Pcx7iducr_f_CcmNtGrdX7-los8vEyTCg5IiUj9uIv0KDL7T_Q&s"
+                                                         alt="Search" style="max-width: 90px; height: auto;">
+                                                </a>
+                                            </li>
+                                        </ul>
 
-                                    <!-- Main content -->
+
+
+                                        <partial name="_LoginPartial" />
+                                    </div>
+                                </div>
+                            </nav>
+                        </header>
+
+
                                     <div class="container">
                                         <main role="main" class="pb-3">
                                             @RenderBody()
@@ -84,11 +83,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2023 - PTracking - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+   
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
   @*  <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>*@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
